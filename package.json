@@ -1,0 +1,24 @@
+{
+  "name": "professora-jane-api",
+  "version": "0.0.1",
+  "description": "Backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Professora-Jane/backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Professora-Jane/backend/issues"
+  },
+  "homepage": "https://github.com/Professora-Jane/backend#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "fastify": "^3.9.2"
+  }
+}
