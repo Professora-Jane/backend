@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const startServer = require("./src/server"); 
+const startServer = require("./src"); 
 
 (async () => {
     await startServer()
