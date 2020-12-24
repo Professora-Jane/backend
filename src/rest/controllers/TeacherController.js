@@ -1,4 +1,5 @@
 const TeacherService = require("../../business/services/TeacherService")
+const { IdResponse } = require("../responseModels/IdResponseModel");
 
 class TeacherController {
     constructor() {
@@ -14,7 +15,7 @@ class TeacherController {
         
         const response = await this.teacherService.createTeacher({ name, email })
 
-        return response.id
+        return new IdResponse(response);
     }
 }
 
