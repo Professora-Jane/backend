@@ -1,20 +1,33 @@
-const fastify = require('fastify')
-
+const fastify = require("fastify");
+const fs = require("fs");
 
 class Server {
-    constructor(otps) {
-        this.server = fastify(otps)
+    constructor() {
+        this.server = undefined
     }
 
-    registerRouteContext({ path, prefix }) {
-        this.server.register(require(path), { prefix })
+    registerRoutes({ routesPath, prefix }) {
+        fs.readdirSync(routesPath).forEach(file => {
+            this.server.register(require(routesPath + file), { prefix })
+        });
+        
         return this
     }
 
-    async initServer(port) {
-        await this.server.listen(port)
+    configureServer(serverOpts) {
+        this.server = fastify(serverOpts)
+        return this
+    }
+
+    async initServer(apiOpts) {
+        
+        await this.server.listen(apiOpts.port)
         return this
     }
 }
 
-module.exports = Server
+const instance = new Server();
+
+module.exports = {
+    serverInstance: instance
+}

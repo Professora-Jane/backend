@@ -1,11 +1,15 @@
 module.exports = {
     api: {
-        port: process.env.PORT
+        port: process.env.PORT || 7111
     },
     server: {
-        logger: true
+        logger: process.env.SERVER_LOGGER || true
     },
     db: {
-        connectionString: process.env.DB_CONNECTION_STRING
+        connectionString: process.env.DB_CONNECTION_STRING,
+        options: {
+            useNewUrlParser: process.env.MONGODB_USE_URL_PARSER || true,
+            useUnifiedTopology: process.env.MONGODB_USE_UNIFIED_TOPOLOGY || true
+        }
     }
 }
