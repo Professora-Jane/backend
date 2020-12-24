@@ -8,8 +8,9 @@ const { dbInstance } = require('./db');
 // Run the server!
 const start = async () => {
     try {
-        //await dbInstance.connect(db);
-
+        await dbInstance.connect(db);
+        
+        //
         await serverInstance
             .configureServer(server)
             .registerRoutes({ routesPath: path.join(__dirname, './rest/routes/v1/'), prefix: 'api/v1' })

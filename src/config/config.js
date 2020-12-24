@@ -1,6 +1,7 @@
 module.exports = {
     api: {
-        port: process.env.PORT || 7111
+        port: process.env.PORT || 7111,
+        timezone: process.env.TZ
     },
     server: {
         logger: process.env.SERVER_LOGGER || true

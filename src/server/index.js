@@ -20,7 +20,6 @@ class Server {
     }
 
     async initServer(apiOpts) {
-        
         await this.server.listen(apiOpts.port)
         return this
     }
@@ -29,5 +28,5 @@ class Server {
 const instance = new Server();
 
 module.exports = {
-    serverInstance: instance
+    serverInstance: (()=> instance)()
 }

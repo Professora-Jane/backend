@@ -10,7 +10,7 @@ class Db {
             this._mongoose = await mongoose.connect(connectionString, options);
     }
 
-    async getCollection(modelName, schema) {
+    getCollection(modelName, schema) {
         if (this._mongoose == undefined)
             throw new Error("Conexão com o banco não realizada!!")
 
@@ -22,5 +22,5 @@ class Db {
 const instance = new Db();
 
 module.exports = {
-    dbInstance: () => instance
+    dbInstance: (() => instance)()
 }
