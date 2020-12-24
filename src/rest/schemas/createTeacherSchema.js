@@ -13,7 +13,7 @@ const schema = {
         '2xx': {
             type: 'object',
             properties: {
-                success: { type: 'boolean' }
+                id: { type: 'string' }
             }
         }
     }
