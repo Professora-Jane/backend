@@ -6,8 +6,12 @@ class TeacherController {
         this.teacherService = new TeacherService();
     }
 
-    async getTeacher() {
-        return { hello: 'world' }
+    async getTeacher(req, res) {
+        const { id } = req.params
+
+        const response = await this.teacherService.findById({ id });
+
+        return response;
     }
 
     async createTeacher(req, res) {
