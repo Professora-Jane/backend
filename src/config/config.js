@@ -11,6 +11,8 @@ module.exports = {
         options: {
             useNewUrlParser: process.env.MONGODB_USE_URL_PARSER || true,
             useUnifiedTopology: process.env.MONGODB_USE_UNIFIED_TOPOLOGY || true
-        }
+        },
+        retryAttempts: 3,
+        retryTimeout: 5000
     }
 }
