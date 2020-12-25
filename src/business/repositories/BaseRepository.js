@@ -1,4 +1,4 @@
-
+const DateUtil = require("../lib/DateUtil")
 
 class BaseRepository {
     constructor(schema) {
@@ -6,13 +6,27 @@ class BaseRepository {
     }
 
     async $getById(id) {
-        return await this.model.findOnde({ _id: id })
+        return await this.model.findOne({ _id: id })
     }
 
     async $save(dataModel) {
         const createdItem = await this.model(dataModel).save();
 
         return createdItem;
+    }
+
+    async $update(dataModel) {
+        dataModel.lastUpdateDate = DateUtil.getDateWithTz();
+
+        const updatedItem = await this.$save(dataModel);
+
+        return updatedItem;
+    }
+
+    async $listAggregate(aggregationPipeline) {
+        const aggregatedPipeline = await this.model.aggregate(aggregationPipeline).exec();
+        
+        return aggregatedPipeline;
     }
 }
 
