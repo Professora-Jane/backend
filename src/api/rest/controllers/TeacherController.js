@@ -1,4 +1,4 @@
-const TeacherService = require("../../business/services/TeacherService")
+const TeacherService = require("../../../business/services/TeacherService")
 const { IdResponse } = require("../responseModels/IdResponseModel");
 
 class TeacherController {

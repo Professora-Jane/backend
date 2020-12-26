@@ -16,7 +16,7 @@ const start = async () => {
         await restServerInstance
             .configureServer(server)
             .registerErrorHandler(errorHandler)
-            .registerRoutes({ routesPath: path.join(__dirname, './rest/routes/v1/'), prefix: 'api/v1' })
+            .registerRoutes({ routesPath: path.join(__dirname, './api/rest/routes/v1/'), prefix: 'api/v1' })
             .initServer(api);
 
             restServerInstance.log.info(`server listening on ${ api.port }`)

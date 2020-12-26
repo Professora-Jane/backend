@@ -1,7 +1,7 @@
 const TeacherController = require("../../controllers/TeacherController");
 const  createTeacherSchema = require("../../schemas/createTeacherSchema");
 const idSchema = require("../../schemas/IdSchema");
-const NotFoundException = require("../../../business/lib/httpExceptions/NotFoundException");
+const NotFoundException = require("../../../../business/lib/httpExceptions/NotFoundException");
 
 const teacherController = new TeacherController();
 
