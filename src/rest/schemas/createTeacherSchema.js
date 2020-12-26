@@ -1,4 +1,3 @@
-const server = require("../../server")
 const schema = {
     body: {
         type: 'object',
