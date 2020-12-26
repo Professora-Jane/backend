@@ -14,5 +14,8 @@ module.exports = {
         },
         retryAttempts: 3,
         retryTimeout: 5000
+    },
+    webSocket: {
+        port: process.env.WS_PORT || 7112
     }
 }
