@@ -2,31 +2,34 @@
 const { restServerInstance } = require('./server/restServer');
 const { wsServerInstance } = require('./server/wsServer');
 const errorHandler = require("./business/lib/RestErrorHandler");
-const { api, server, db, webSocket } = require("./config/config");
+const config = require("./config/config");
 const path = require('path');
 const { dbInstance } = require('./db');
-
+const { wsHandlerInstance } = require("./api/websocket/WsHandler")
 
 // Run the server!
 const start = async () => {
     try {
-        await dbInstance.connect(db);
+        await dbInstance.connect(config.db);
         
         //
         await restServerInstance
-            .configureServer(server)
+            .configureServer(config.server)
             .registerErrorHandler(errorHandler)
             .registerRoutes({ routesPath: path.join(__dirname, './api/rest/routes/v1/'), prefix: 'api/v1' })
-            .initServer(api);
+            .initServer(config.api);
 
             restServerInstance.log.info(`server listening on ${ api.port }`)
         
-        wsServerInstance
-            .registerOnMessageHandler((ws, req, msg) => {
-                console.log(msg); 
-                ws.send('qqCoisa', {teste: msg})
+        wsHandlerInstance
+            .registerControllers({ 
+                path: path.join(__dirname, './api/websocket/controllers/'),
+                ignoreFiles: ["BaseController.js"]
             })
-            .initServer(webSocket);
+
+        wsServerInstance
+            .registerOnMessageHandler(wsHandlerInstance.messageHandler)
+            .initServer(config.webSocket);
     } 
     catch (err) {
         restServerInstance.log.error(err)
