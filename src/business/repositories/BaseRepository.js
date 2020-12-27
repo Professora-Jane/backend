@@ -18,7 +18,7 @@ class BaseRepository {
     async $update(dataModel) {
         dataModel.lastUpdateDate = DateUtil.getDateWithTz();
 
-        const updatedItem = await this.$save(dataModel);
+        const updatedItem = await dataModel.save();
 
         return updatedItem;
     }
