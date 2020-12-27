@@ -80,8 +80,7 @@ class WsServer {
      * @param { requestCallback } cb - Callback de retorno 
      * @callback requestCallback 
      * @param { ws }  ws - Instância atual do socket
-     * @param { IncomingMessage } req 
-     * @param { string } msg - mensagem stringficada
+     * @param { IncomingMessage } req
      */
     registerOnCloseHandler(cb) {
         this.onCloseHandler = cb

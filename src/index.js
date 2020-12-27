@@ -6,6 +6,7 @@ const config = require("./config/config");
 const path = require('path');
 const { dbInstance } = require('./db');
 const { wsHandlerInstance } = require("./api/websocket/WsHandler")
+const { wsConnectionsInstance } = require("./api/websocket/wsConnections")
 
 // Run the server!
 const start = async () => {
@@ -19,7 +20,7 @@ const start = async () => {
             .registerRoutes({ routesPath: path.join(__dirname, './api/rest/routes/v1/'), prefix: 'api/v1' })
             .initServer(config.api);
 
-            restServerInstance.log.info(`server listening on ${ api.port }`)
+            restServerInstance.log.info(`server listening on ${ config.api.port }`)
         
         wsHandlerInstance
             .registerControllers({ 
@@ -29,6 +30,7 @@ const start = async () => {
 
         wsServerInstance
             .registerOnMessageHandler(wsHandlerInstance.messageHandler)
+            .registerOnCloseHandler(wsConnectionsInstance.removeSocket)
             .initServer(config.webSocket);
     } 
     catch (err) {

@@ -1,4 +1,5 @@
 const pubsub = require("pubsub-js");
+const { wsConnectionsInstance } = require("./wsConnections");
 const fs = require("fs");
 
 class WsHandler {
@@ -6,9 +7,12 @@ class WsHandler {
     messageHandler(ws, req, msg) {
 
         const { type, content } = JSON.parse(msg)
-
+        
         if (type === "connection") {
-            // TODO Register ws
+            // TODO alterar para receber o id do usuário via req;
+            ws.id = content.id
+
+            wsConnectionsInstance.addSocket(ws)
         }
         else {
             pubsub.publish(type, content)
