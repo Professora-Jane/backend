@@ -1,15 +1,13 @@
 const ws = require("ws");
 
-/**
- * @typedef {{sockets: Array<ws>}} socketDescription
- * @type {Map<string, socketDescription>}
- */
-const CONNECTED_SOCKETS = new Map();
-
 class WsConnections {
-    constructor() {
 
-    }
+    /**
+     * @typedef {{sockets: Array<ws>}} socketDescription
+     * @type {Map<string, socketDescription>}
+     */
+    #CONNECTED_SOCKETS = new Map();
+    
 
     /**
      * @description Função responsável por adicionar sockets no Map CONNECTED_SOCKETS, que gerencia todos os sockets conectados
@@ -19,12 +17,12 @@ class WsConnections {
     addSocket(ws) {
         if (!ws.id) return false
 
-        const clientSockets = CONNECTED_SOCKETS.get(ws.id);
+        const clientSockets = this.#CONNECTED_SOCKETS.get(ws.id);
 
         if (clientSockets)
             clientSockets.sockets.push(ws)
         else {
-            CONNECTED_SOCKETS.set(ws.id, {
+            this.#CONNECTED_SOCKETS.set(ws.id, {
                 sockets: [ws]
             })
         }
@@ -41,7 +39,7 @@ class WsConnections {
     removeSocket(ws) {
         if (!ws.id) return false
 
-        const clientSockets = CONNECTED_SOCKETS.get(ws.id);
+        const clientSockets = this.#CONNECTED_SOCKETS.get(ws.id);
 
         if (clientSockets) {
             const indexToRemove = clientSockets.sockets.findIndex(socket => socket.id === ws.id);
@@ -50,7 +48,7 @@ class WsConnections {
                 clientSockets.sockets.splice(indexToRemove, 1);
 
             if (clientSockets.sockets.length === 0)
-                CONNECTED_SOCKETS.delete(ws.id)
+                this.#CONNECTED_SOCKETS.delete(ws.id)
 
             return true
         }
@@ -64,7 +62,7 @@ class WsConnections {
      * @returns {{ Array<ws> | undefined }}
      */
     getSockets(id) {
-        const clientSockets = CONNECTED_SOCKETS.get(ws.id);
+        const clientSockets = this.#CONNECTED_SOCKETS.get(id);
 
         if (clientSockets)
             return clientSockets.sockets
