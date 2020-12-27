@@ -10,10 +10,6 @@ const DisciplineModel = new Schema({
     description: {
         type: String
     },
-    domainId: {
-        type: Number,
-        required: true
-    },
     active: {
         default: true,
         type: Boolean,
