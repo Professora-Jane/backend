@@ -17,6 +17,10 @@ const TeacherStudentClassModel = new Schema({
         type: String,
         required: true,
     },
+    duration: {
+        type: Number,
+        required: true
+    },
     discipline: {
         type: Types.ObjectId,
         ref: 'Discipline',

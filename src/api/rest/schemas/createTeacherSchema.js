@@ -1,21 +1,12 @@
 const schema = {
     body: {
         type: 'object',
-        required: ['name'],
+        required: ['name', 'email'],
         properties: {
             name: { type: 'string' },
             email: { type: 'string' }
         }
-
     },
-    response: {
-        '2xx': {
-            type: 'object',
-            properties: {
-                id: { type: 'string' }
-            }
-        }
-    }
 }
 
 
