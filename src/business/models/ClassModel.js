@@ -3,7 +3,7 @@ const { dbInstance } = require("../../db");
 const DateAndTimeUtils = require('../lib/DateAndTimeUtil');
 const DateUtil = require("../lib/DateAndTimeUtil")
 
-const TeacherStudentClassModel = new Schema({
+const ClassModel = new Schema({
     studentId: {
         type: Types.ObjectId,
         ref: 'Student',
@@ -48,9 +48,9 @@ const TeacherStudentClassModel = new Schema({
         default: () => DateUtil.getDateWithTz()
     }
 }, { 
-    collection: 'teacher_student',
+    collection: 'class',
     toJSON: { getters: true },
     toObject: { getters: true }
 });
 
-module.exports = dbInstance.getCollection("TeacherStudentClass", TeacherStudentClassModel);
+module.exports = dbInstance.getCollection("TeacherStudentClass", ClassModel);

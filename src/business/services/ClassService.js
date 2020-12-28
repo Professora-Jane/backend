@@ -4,12 +4,12 @@ const TeacherService = require("./TeacherService");
 const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const InvalidParamsException = require("../lib/httpExceptions/InvalidParamsException");
 const DisciplineService = require("./DisciplineService");
-const TeacherStudentClassRepository = require("../repositories/TeacherStudentClassRepository");
+const ClassRepository = require("../repositories/ClassRepository");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 
-class TeacherStudentClassService extends BaseService {
+class ClassService extends BaseService {
     constructor() {
-        super(TeacherStudentClassRepository)
+        super(ClassRepository)
         this.studentService = new StudentService();
         this.teacherService = new TeacherService();
         this.disciplineService = new DisciplineService();
@@ -108,5 +108,4 @@ class TeacherStudentClassService extends BaseService {
     }
 }
 
-module.exports = TeacherStudentClassService
-
+module.exports = ClassService

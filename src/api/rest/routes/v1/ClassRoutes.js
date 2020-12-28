@@ -1,8 +1,8 @@
-const TeacherStudentClassController = require("../../controllers/TeacherStudentClassController");
+const ClassController = require("../../controllers/ClassController");
 const IdResponseSchema = require("../../schemas/IdResponseSchema");
 const idSchema = require("../../schemas/IdSchema");
 
-const teacherStudentClassController = new TeacherStudentClassController();
+const classController = new ClassController();
 
 module.exports = (app, opts, done) => {
 
@@ -13,7 +13,7 @@ module.exports = (app, opts, done) => {
                 params: idSchema.params
             }
         },
-        async (req, res) => await teacherStudentClassController.getClass(req, res)
+        async (req, res) => await classController.getClass(req, res)
     );
 
     app.post(
@@ -55,7 +55,7 @@ module.exports = (app, opts, done) => {
                 response: IdResponseSchema.response 
             }
         },
-        async (req, res) => await teacherStudentClassController.createClass(req, res)
+        async (req, res) => await classController.createClass(req, res)
     );
 
     done()

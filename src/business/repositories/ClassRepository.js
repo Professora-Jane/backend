@@ -1,10 +1,10 @@
-const TeacherStudentModel = require("../models/TeacherStudentModel");
+const ClassModel = require("../models/ClassModel");
 const BaseRepository = require("./BaseRepository");
 const mongoose = require("mongoose");
 
-class TeacherStudentClassRepository extends BaseRepository {
+class ClassRepository extends BaseRepository {
     constructor() {
-        super(TeacherStudentModel)
+        super(ClassModel)
     }
 
     /**
@@ -72,4 +72,4 @@ class TeacherStudentClassRepository extends BaseRepository {
     }
 }
 
-module.exports = TeacherStudentClassRepository
+module.exports = ClassRepository

@@ -1,10 +1,10 @@
-const TeacherStudentClassService = require("../../../business/services/TeacherStudentClassService");
+const ClassService = require("../../../business/services/ClassService");
 const { IdResponse } = require("../responseModels/IdResponseModel");
 const { FastifyReply, FastifyRequest } = require("fastify");
 
-class TeacherStudentClassController {
+class ClassController {
     constructor() {
-        this.teacherStudentClassService = new TeacherStudentClassService();
+        this.teacherStudentClassService = new ClassService();
     }
 
     /**
@@ -52,4 +52,4 @@ class TeacherStudentClassController {
     }
 }
 
-module.exports = TeacherStudentClassController
+module.exports = ClassController
