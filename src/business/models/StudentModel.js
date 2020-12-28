@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 const { dbInstance } = require("../../db")
-const DateUtil = require("../lib/DateUtil")
+const DateUtil = require("../lib/DateAndTimeUtil")
 
 const StudentModel = new Schema({
     name: {

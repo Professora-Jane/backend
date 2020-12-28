@@ -1,4 +1,4 @@
-const DateUtil = require("../lib/DateUtil")
+const DateUtil = require("../lib/DateAndTimeUtil")
 
 class BaseRepository {
     constructor(schema) {
