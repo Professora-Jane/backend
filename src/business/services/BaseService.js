@@ -1,3 +1,5 @@
+const NotFoundException = require("../lib/httpExceptions/NotFoundException");
+
 class BaseService {
 
     constructor(classRepository) {
@@ -8,7 +10,7 @@ class BaseService {
         const entity = await this.repository.$getById(id);
 
         if (!entity)
-            throw new Error("Não encontrado");
+            throw new NotFoundException("Item não encontrado");
 
         return entity
     }
