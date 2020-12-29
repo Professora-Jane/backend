@@ -32,7 +32,13 @@ class StudentRepository extends BaseRepository {
                 }
             }, {
                 '$project': {
-                    'teacher_student': 0
+                    'teacher_student': 0,
+                }
+            }, {
+                '$addFields': {
+                    'id': {
+                        '$toString':'$_id'
+                    }
                 }
             }
         ]
