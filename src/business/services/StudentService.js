@@ -1,3 +1,4 @@
+const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const StudentRepository = require("../repositories/StudentRepository");
 const BaseService = require("./BaseService");
 
@@ -11,6 +12,15 @@ class StudentService extends BaseService {
 
         return createdStudent
     }
+
+    async getStudentByEmail({ email }) {
+        const student = await this.repository.$findOne({ email });
+
+        if (!student)
+            throw new NotFoundException("Nenhum estudante encontrado para o email informado", { email })
+
+        return student
+    }
     
     async update({ name, email, cellPhone, active,  id }) {
         const currentStudent = await this.findById({ id })
@@ -23,6 +33,15 @@ class StudentService extends BaseService {
         const updatedStudent = await this.repository.$update(currentStudent)
 
         return updatedStudent;
+    }
+
+    async listByTeacherId({ page, limit, search, teacherId }) {
+        const response = await this.repository.listStudentsByTeacherId({ page, limit, search, teacherId });
+
+        if (!response) 
+            throw new NotFoundException("Nenhum aluno encontrado para os termos fornecidos", { page, limit, search, teacherId })
+        
+        return response;
     }
 }
 

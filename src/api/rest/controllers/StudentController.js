@@ -36,6 +36,22 @@ class StudentController {
             .code(201)
             .send(new IdResponse(response));
     }
+
+    /**
+     * 
+     * @param { FastifyRequest } req 
+     * @param { FastifyReply } res 
+     */
+    async listByTeacherId(req, res) {
+        const { id } = req.params
+        const { page = 1, limit = 20, search = "" } = req.query
+        
+        const response = await this.studentService.listByTeacherId({ page, limit, search, teacherId: id })
+        
+        res
+            .code(200)
+            .send(response);
+    }
 }
 
 module.exports = StudentController

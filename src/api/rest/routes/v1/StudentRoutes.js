@@ -16,6 +16,21 @@ module.exports = (app, opts, done) => {
         },
         async (req, res) => await studentController.getById(req, res)
     );
+    
+    app.get(
+        '/student/list/byTeacher/:id', 
+        { 
+            schema: { 
+                params: idSchema.params,
+                query: {
+                    page: { type: 'number' },
+                    limit: { type: 'number' },
+                    search: { type: 'string' }
+                }
+            }
+        },
+        async (req, res) => await studentController.listByTeacherId(req, res)
+    );
 
     app.post(
         '/student', 
