@@ -9,6 +9,15 @@ class BaseRepository {
         return await this.model.findOne({ _id: id })
     }
 
+    async $list(query) {
+        const recordModel = await this.model.find(query);
+        return recordModel;
+    }
+
+    async $findOne(query) {
+        return await this.model.findOne(query);
+    }
+
     async $save(dataModel) {
         const createdItem = await this.model(dataModel).save();
 
@@ -36,14 +45,12 @@ class BaseRepository {
      * @param { string | Number } params.limit - Limite de itens por página
      * @param { Array<string> } [params.searchFields = []] - Array com as chaves (atributos) que serão considerados ao se realizar a busca
      * @param { string } [params.search = undefined ] - Termo que será buscado
-     * @param { object } [params.itemQuery = {}] - Query de limite dos itens que serão paginados.
+     * @param { object } [params.itemQuery = []] - Pipeline que será executado. Opcional
      * @returns { boolean | object }
      */
-    async $paginate({ page, limit, searchFields = [], search = undefined, itemQuery = {} }) {
+    async $paginate({ page, limit, searchFields = [], search = undefined, pipeline = [] }) {
         const initialPipeline = [
-            {
-                '$match': itemQuery
-            },
+            ...pipeline,
             ...(!!search.length ? [{
 				'$match': {
                     '$or': searchFields.map(field => ({ [field]: {'$regex': search, '$options': 'i'} }))
