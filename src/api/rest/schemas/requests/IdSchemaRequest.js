@@ -1,4 +1,4 @@
-const schema = {
+module.exports = {
     params: {
         type: 'object',
         required: ['id'],
@@ -7,6 +7,3 @@ const schema = {
         }
     }
 }
-
-
-module.exports = schema
