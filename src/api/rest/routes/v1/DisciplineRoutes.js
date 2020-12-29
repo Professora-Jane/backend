@@ -1,5 +1,4 @@
 const DisciplineController = require("../../controllers/DisciplineController");
-const createTeacherSchema = require("../../schemas/createTeacherSchema");
 const IdResponseSchema = require("../../schemas/IdResponseSchema");
 const idSchema = require("../../schemas/IdSchema");
 const disciplineController = new DisciplineController();

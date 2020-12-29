@@ -19,6 +19,36 @@ module.exports = (app, opts, done) => {
         async (req, res) => await teacherController.createTeacher(req, res)
     );
 
+    app.post(
+        '/teacher/student', 
+        { 
+            schema: { 
+                body: {
+                    type: 'object',
+                    required: ['teacherId'],
+                    properties: {
+                        studentId: { 
+                            type: 'string',
+                            minLength: 24,
+                            maxLength: 24
+                        },
+                        teacherId: { 
+                            type: 'string',
+                            minLength: 24,
+                            maxLength: 24
+                        },
+                        studentEmail: {
+                            type: 'string'
+                        }
+                    }
+                }, 
+                response: IdResponseSchema.response 
+            }
+        },
+        async (req, res) => await teacherController.createTeacherStudent(req, res)
+    );
+
     app.put('/teacher/:id', async (req, res) => await teacherController.updateTeacher(req, res));
+    
     done()
 }
