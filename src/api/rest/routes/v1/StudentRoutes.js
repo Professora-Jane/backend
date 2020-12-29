@@ -1,7 +1,11 @@
-const IdResponseSchema = require("../../schemas/IdResponseSchema");
-const idSchema = require("../../schemas/IdSchema");
-const createStudentSchema = require("../../schemas/createStudentSchema");
+const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
+const idSchema = require("../../schemas/requests/IdSchemaRequest");
+const createStudentSchema = require("../../schemas/requests/CreateStudentRequest");
 const StudentController = require("../../controllers/StudentController");
+const PaginatedResponseSchema = require("../../schemas/responses/PaginatedResponseSchema");
+const StudentSchemaResponseModel = require("../../schemas/responses/StudentSchemaResponseModel");
+const DefaultPaginationQuery = require("../../schemas/requests/DefaultPaginationQuery");
+const DefaultResponseModel = require("../../schemas/responses/DefaultResponseModel");
 
 const studentController = new StudentController();
 
@@ -11,7 +15,8 @@ module.exports = (app, opts, done) => {
         '/student/:id', 
         { 
             schema: { 
-                params: idSchema.params
+                params: idSchema.params,
+                response: DefaultResponseModel(StudentSchemaResponseModel).response
             }
         },
         async (req, res) => await studentController.getById(req, res)
@@ -22,11 +27,8 @@ module.exports = (app, opts, done) => {
         { 
             schema: { 
                 params: idSchema.params,
-                query: {
-                    page: { type: 'number' },
-                    limit: { type: 'number' },
-                    search: { type: 'string' }
-                }
+                query: DefaultPaginationQuery,
+                response: PaginatedResponseSchema(StudentSchemaResponseModel).response
             }
         },
         async (req, res) => await studentController.listByTeacherId(req, res)
@@ -43,6 +45,5 @@ module.exports = (app, opts, done) => {
         async (req, res) => await studentController.createStudent(req, res)
     );
 
-    // app.put('/teacher/:id', async (req, res) => await studentController.updateTeacher(req, res));
     done()
 }

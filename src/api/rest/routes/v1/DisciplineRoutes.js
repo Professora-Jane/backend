@@ -1,6 +1,6 @@
 const DisciplineController = require("../../controllers/DisciplineController");
-const IdResponseSchema = require("../../schemas/IdResponseSchema");
-const idSchema = require("../../schemas/IdSchema");
+const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
+const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const disciplineController = new DisciplineController();
 
 

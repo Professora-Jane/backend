@@ -1,6 +1,6 @@
 const ClassController = require("../../controllers/ClassController");
-const IdResponseSchema = require("../../schemas/IdResponseSchema");
-const idSchema = require("../../schemas/IdSchema");
+const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
+const idSchema = require("../../schemas/requests/IdSchemaRequest");
 
 const classController = new ClassController();
 
@@ -43,7 +43,6 @@ module.exports = (app, opts, done) => {
                                 type: 'number',
                                 enum: [0,1,2,3,4,5,6]
                             }
-                            
                         },
                         discipline: { 
                             type: 'string',

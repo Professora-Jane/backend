@@ -1,7 +1,7 @@
 const TeacherController = require("../../controllers/TeacherController");
 const createTeacherSchema = require("../../schemas/createTeacherSchema");
-const IdResponseSchema = require("../../schemas/IdResponseSchema");
-const idSchema = require("../../schemas/IdSchema");
+const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
+const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const teacherController = new TeacherController();
 
 
