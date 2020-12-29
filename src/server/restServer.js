@@ -32,6 +32,8 @@ class RestServer {
 
     configureServer(serverOpts) {
         this.server = fastify(serverOpts);
+        this.server.register(require("fastify-cors"));
+        
         return this;
     }
 
