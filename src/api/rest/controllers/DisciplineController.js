@@ -1,5 +1,4 @@
 const DisciplineService = require("../../../business/services/DisciplineService");
-const { IdResponse } = require("../responseModels/IdResponseModel");
 const { FastifyReply, FastifyRequest } = require("fastify");
 
 class StudentController {
@@ -34,7 +33,7 @@ class StudentController {
         
         res
             .code(201)
-            .send(new IdResponse(response));
+            .send(response);
     }
 
     /**

@@ -1,5 +1,4 @@
 const ClassService = require("../../../business/services/ClassService");
-const { IdResponse } = require("../responseModels/IdResponseModel");
 const { FastifyReply, FastifyRequest } = require("fastify");
 
 class ClassController {
@@ -48,7 +47,7 @@ class ClassController {
 
         res
             .code(200)
-            .send(new IdResponse(response));
+            .send(response);
     }
 }
 
