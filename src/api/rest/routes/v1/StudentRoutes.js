@@ -15,6 +15,7 @@ module.exports = (app, opts, done) => {
         '/student/:id', 
         { 
             schema: { 
+                tags: ['Students'],
                 params: idSchema.params,
                 response: DefaultResponseModel(StudentSchemaResponseModel).response
             }
@@ -26,6 +27,7 @@ module.exports = (app, opts, done) => {
         '/student/list/byTeacher/:id', 
         { 
             schema: { 
+                tags: ['Students'],
                 params: idSchema.params,
                 query: DefaultPaginationQuery,
                 response: PaginatedResponseSchema(StudentSchemaResponseModel).response
@@ -38,8 +40,9 @@ module.exports = (app, opts, done) => {
         '/student', 
         { 
             schema: { 
+                tags: ['Students'],
                 body: createStudentSchema.body, 
-                response: IdResponseSchema.response
+                response: IdResponseSchema("Id do estudante criado").response
             }
         }, 
         async (req, res) => await studentController.createStudent(req, res)

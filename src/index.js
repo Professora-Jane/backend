@@ -16,6 +16,7 @@ const start = async () => {
         //
         await restServerInstance
             .configureServer(config.server)
+            .configureSwagger(config.openApi)
             .registerErrorHandler(errorHandler)
             .registerRoutes({ routesPath: path.join(__dirname, './api/rest/routes/v1/'), prefix: 'api/v1' })
             .initServer(config.api);

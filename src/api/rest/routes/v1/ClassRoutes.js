@@ -10,6 +10,7 @@ module.exports = (app, opts, done) => {
         '/class/:id', 
         { 
             schema: { 
+                tags: ['Class'],
                 params: idSchema.params
             }
         },
@@ -20,6 +21,7 @@ module.exports = (app, opts, done) => {
         '/class', 
         { 
             schema: { 
+                tags: ['Class'],
                 body: {
                     type: 'object',
                     required: ['studentId', 'teacherId', 'startTime', 'endTime', 'daysOfWeek', 'discipline'],
@@ -51,7 +53,7 @@ module.exports = (app, opts, done) => {
                         },
                     }
                 }, 
-                response: IdResponseSchema.response 
+                response: IdResponseSchema().response 
             }
         },
         async (req, res) => await classController.createClass(req, res)

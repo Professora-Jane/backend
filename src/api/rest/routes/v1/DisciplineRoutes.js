@@ -1,6 +1,7 @@
 const DisciplineController = require("../../controllers/DisciplineController");
 const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const idSchema = require("../../schemas/requests/IdSchemaRequest");
+const DefaultPaginationQuery = require("../../schemas/requests/DefaultPaginationQuery");
 const disciplineController = new DisciplineController();
 
 
@@ -8,7 +9,10 @@ module.exports = (app, opts, done) => {
     app.get(
         '/discipline/:id', 
         { 
-            schema: idSchema 
+            schema: {
+                tags: ['Disciplines'],
+                params: idSchema.params
+            } 
         },
         async (req, res) => await disciplineController.getById(req, res)
     );
@@ -17,6 +21,7 @@ module.exports = (app, opts, done) => {
         '/discipline', 
         { 
             schema: { 
+                tags: ['Disciplines'],
                 body: {
                     type: 'object',
                     required: ['name', 'description'],
@@ -25,7 +30,7 @@ module.exports = (app, opts, done) => {
                         description: { type: 'string' }
                     }
                 }, 
-                response: IdResponseSchema.response 
+                response: IdResponseSchema().response 
             }
         },
         async (req, res) => await disciplineController.createDiscipline(req, res)
@@ -35,11 +40,8 @@ module.exports = (app, opts, done) => {
         '/disciplines',
         {
             schema: {
-                query: {
-                    page: { type: 'number' },
-                    limit: { type: 'number' },
-                    search: { type: 'string' }
-                }
+                tags: ['Disciplines'],
+                query: DefaultPaginationQuery,
             }
         },
         async (req, res) => await disciplineController.listDisciplines(req, res)

@@ -6,12 +6,22 @@ const teacherController = new TeacherController();
 
 
 module.exports = (app, opts, done) => {
-    app.get('/teacher/:id', { schema: idSchema }, async (req, res) => await teacherController.getTeacher(req, res));
+    app.get(
+        '/teacher/:id', 
+        { 
+            schema: {
+                tags: ['Teacher'],
+                params: idSchema.params
+            } 
+        }, 
+        async (req, res) => await teacherController.getTeacher(req, res)
+    );
 
     app.post(
         '/teacher', 
         { 
             schema: { 
+                tags: ['Teacher'],
                 body: createTeacherSchema.body, 
                 response: IdResponseSchema.response 
             }
@@ -23,6 +33,7 @@ module.exports = (app, opts, done) => {
         '/teacher/student', 
         { 
             schema: { 
+                tags: ['Teacher'],
                 body: {
                     type: 'object',
                     required: ['teacherId'],
@@ -48,7 +59,16 @@ module.exports = (app, opts, done) => {
         async (req, res) => await teacherController.createTeacherStudent(req, res)
     );
 
-    app.put('/teacher/:id', async (req, res) => await teacherController.updateTeacher(req, res));
+    app.put(
+        '/teacher/:id',
+        {
+            schema: {
+                tags: ['Teacher'],
+                params: idSchema.params
+            }
+        },
+        async (req, res) => await teacherController.updateTeacher(req, res)
+    );
     
     done()
 }
