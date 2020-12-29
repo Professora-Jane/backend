@@ -10,6 +10,7 @@ const TeacherModel = new Schema({
     email: {
         type: String,
         required: true,
+        unique: true
     },
     active: {
         default: true,
@@ -24,6 +25,15 @@ const TeacherModel = new Schema({
         type: Date,
         default: () => DateUtil.getDateWithTz()
     }
-}, { collection: 'teacher' });
+}, { 
+    collection: 'teacher',
+    toJSON: {
+        getters: true
+    }
+});
+
+TeacherModel.virtual("id").get(function() {
+    return this._id.toHexString();
+})
 
 module.exports = dbInstance.getCollection("Teacher", TeacherModel);

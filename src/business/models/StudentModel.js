@@ -10,6 +10,7 @@ const StudentModel = new Schema({
     email: {
         type: String,
         required: true,
+        unique: true
     },
     cellPhone: {
         type: String,
@@ -27,6 +28,15 @@ const StudentModel = new Schema({
         type: Date,
         default: () => DateUtil.getDateWithTz()
     }
-}, { collection: 'student' });
+}, { 
+    collection: 'student',
+    toJSON: {
+        getters: true,
+    }
+});
+
+StudentModel.virtual("id").get(function() {
+    return this._id.toHexString();
+})
 
 module.exports = dbInstance.getCollection("Student", StudentModel);

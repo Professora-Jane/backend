@@ -21,6 +21,16 @@ const TeacherStudentModel = new Schema({
         type: Date,
         default: () => DateUtil.getDateWithTz()
     }
-}, { collection: 'teacher_student' });
+}, { 
+    collection: 'teacher_student',
+    toJSON: {
+        getters: true
+    }
+});
+
+TeacherStudentModel.virtual("id").get(function() {
+    return this._id.toHexString();
+})
+
 
 module.exports = dbInstance.getCollection("TeacherStudent", TeacherStudentModel);

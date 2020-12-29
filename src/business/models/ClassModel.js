@@ -49,8 +49,15 @@ const ClassModel = new Schema({
     }
 }, { 
     collection: 'class',
-    toJSON: { getters: true },
+    toJSON: { 
+        getters: true
+    },
     toObject: { getters: true }
 });
+
+ClassModel.virtual("id").get(function() {
+    return this._id.toHexString();
+})
+
 
 module.exports = dbInstance.getCollection("TeacherStudentClass", ClassModel);

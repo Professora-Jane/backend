@@ -15,6 +15,7 @@ const ResponsibleModel = new Schema({
     email: {
         type: String,
         required: true,
+        unique: true
     },
     cellPhone: {
         type: String,
@@ -32,6 +33,16 @@ const ResponsibleModel = new Schema({
         type: Date,
         default: () => DateUtil.getDateWithTz()
     }
-}, { collection: 'responsible' });
+}, { 
+    collection: 'responsible',
+    toJSON: {
+        getters: true
+    }
+});
+
+ResponsibleModel.virtual("id").get(function() {
+    return this._id.toHexString();
+})
+
 
 module.exports = dbInstance.getCollection("Responsible", ResponsibleModel);
