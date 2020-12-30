@@ -9,7 +9,8 @@ const ConflictException = require("../lib/httpExceptions/ConflictException");
 
 class ClassService extends BaseService {
     constructor() {
-        super(ClassRepository)
+        super()
+        this.repository = new ClassRepository();
         this.studentService = new StudentService();
         this.teacherService = new TeacherService();
         this.disciplineService = new DisciplineService();
@@ -24,7 +25,7 @@ class ClassService extends BaseService {
         discipline
     }) {
         this.#validateClassSchedule({ startTime, endTime, daysOfWeek });
-        await this.#validateOthersClassesByScheduleAndDiscipline({ startTime, teacherId, endTime, discipline, daysOfWeek });
+        await this.#validateOthersClassesByScheduleAndDiscipline({ startTime, teacherId, endTime, discipline, daysOfWeek, studentId });
 
         startTime = DateAndTimeUtils.convertHourToMinutes(startTime)
         endTime = DateAndTimeUtils.convertHourToMinutes(endTime)
@@ -55,12 +56,25 @@ class ClassService extends BaseService {
      * @param { string } params.endTime - Tempo de fim da aula 
      * @param { string } params.teacherId - Id do professor
      * @param { string } params.discipline - Id da disciplina que será ministrada
-     * @param { Array<string> } params.daysOfWeek - Array de dias da semana os quais serão ministrados a disciplina
+     * @param { Array<string|number> } params.daysOfWeek - Array de dias da semana os quais serão ministrados a disciplina
      * 
      * @throws { ConflictException } 
      * @returns { true }
      */
-    async #validateOthersClassesByScheduleAndDiscipline({ startTime, teacherId, endTime, discipline, daysOfWeek }) {
+    async #validateOthersClassesByScheduleAndDiscipline({ startTime, teacherId, endTime, discipline, daysOfWeek, studentId }) {
+        const actuallyExists = await this.repository.checkIfClassExists({
+            time: DateAndTimeUtils.convertHourToMinutes(startTime),
+            teacherId,
+            daysOfWeek,
+            studentId
+        })
+
+        if (actuallyExists)
+            throw new ConflictException(
+                "A classe informada já existe ou conflita com uma já existente para o aluno informado", 
+                { startTime, endTime, daysOfWeek, studentId }
+            )
+
         const initValidation = await this.repository.checkIfTimeConflictsWithOtherClasses({ 
             time: DateAndTimeUtils.convertHourToMinutes(startTime), 
             teacherId, 

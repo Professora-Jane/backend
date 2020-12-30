@@ -8,7 +8,8 @@ const TeacherService = require("./TeacherService");
 
 class TeacherStudentService extends BaseService {
     constructor() {
-        super(TeacherStudentRepository)
+        super()
+        this.repository = new TeacherStudentRepository();
         this.studentService = new StudentService();
         this.teacherService = new TeacherService();
     }

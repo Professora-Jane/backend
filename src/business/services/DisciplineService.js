@@ -4,7 +4,8 @@ const BaseService = require("./BaseService");
 
 class DisciplineService extends BaseService {
     constructor() {
-        super(DisciplineRepository)
+        super()
+        this.repository = new DisciplineRepository();
     }
 
     async createDiscipline({ name, description }) {

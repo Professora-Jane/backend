@@ -1,10 +1,14 @@
+const { tz } = require("moment-timezone");
+const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
+const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const TeacherRepository = require("../repositories/TeacherRepository");
 const BaseService = require("./BaseService");
 
 class TeacherService extends BaseService {
 
     constructor() {
-        super(TeacherRepository)
+        super()
+        this.repository = new TeacherRepository();
     }
 
     async createTeacher({ name, email }) {
@@ -23,6 +27,23 @@ class TeacherService extends BaseService {
         const updatedTeacher = await this.repository.$update(currentTeacher)
         
         return updatedTeacher;
+    }
+
+    async listTeacherClass({ teacherId }) {
+        const classList = await this.repository.listTeacherClasses({ teacherId });
+
+        if (!classList)
+            throw new NotFoundException("Nenhuma classe encontrada para o professor informado", { teacherId })
+        
+        const classesWithTime = classList.map(item => {
+
+            item.startTime = DateAndTimeUtils.getTimestampFromMinutesAndDayIndex(item.startTime, item.daysOfWeek)
+            item.endTime = DateAndTimeUtils.getTimestampFromMinutesAndDayIndex(item.endTime, item.daysOfWeek)
+
+            return item
+        })
+
+        return classesWithTime;
     }
 }
 

@@ -4,7 +4,8 @@ const BaseService = require("./BaseService");
 
 class StudentService extends BaseService {
     constructor() {
-        super(StudentRepository);
+        super();
+        this.repository = new StudentRepository();
     }
 
     async createStudent({ name, email, cellPhone }) {
