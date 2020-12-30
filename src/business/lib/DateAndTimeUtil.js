@@ -1,9 +1,10 @@
-const tz = require("moment-timezone");
+const { tz } = require("moment-timezone");
+const moment = require("moment-timezone");
 const { api } = require("../../config/config")
 
 class DateAndTimeUtils {
     static getDateWithTz() {
-        return tz().utc(api.timezone).toDate()
+        return moment().utc(api.timezone).toDate()
     }
     
 
@@ -16,8 +17,8 @@ class DateAndTimeUtils {
      * @returns { number }
      */
     static compareHours(startHour, endHour) {
-        const init = tz(startHour, 'HH:mm');
-        const end = tz(endHour, 'HH:mm');
+        const init = moment(startHour, 'HH:mm');
+        const end = moment(endHour, 'HH:mm');
         
         return end.diff(init) / 60000
     }
@@ -48,7 +49,19 @@ class DateAndTimeUtils {
         return formattedHour
     }
 
-
+    /**
+     * @description Função auxiliar para montar um timestamp a partir dos minutos totais e um índice representando o dia da semana
+     * @param { number } time String representando hora no formato 'HH:mm'
+     * @param { number } dayOfWeekIndex String representando hora no formato 'HH:mm'
+     * @returns { number }
+     */
+    static getTimestampFromMinutesAndDayIndex(time, dayOfWeekIndex) {
+        const correctDay = tz().startOf('isoWeek').toDate();
+        correctDay.setHours(parseInt(time / 60), parseInt(time % 60))
+        correctDay.setDate(correctDay.getDate() + dayOfWeekIndex)
+                            
+        return +correctDay
+    }
 }
 
 module.exports = DateAndTimeUtils

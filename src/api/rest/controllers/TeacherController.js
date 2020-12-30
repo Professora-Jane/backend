@@ -27,6 +27,21 @@ class TeacherController {
      * 
      * @param { FastifyRequest } req 
      * @param { FastifyReply } res 
+     */    
+    async listTeacherClasses(req, res) {
+        const { id } = req.params
+
+        const response = await this.teacherService.listTeacherClass({ teacherId: id });
+
+        res
+            .code(200)
+            .send(response);
+    }
+
+    /**
+     * 
+     * @param { FastifyRequest } req 
+     * @param { FastifyReply } res 
      */
     async createTeacher(req, res) {
         const { name, email } = req.body

@@ -70,6 +70,37 @@ class ClassRepository extends BaseRepository {
 
         return result[0]?.id > 0
     }
+
+    /**
+     * 
+     * @param {*} param0
+     * @returns { boolean } 
+     */
+    async checkIfClassExists({ teacherId, time, daysOfWeek, studentId }) {
+        if (typeof teacherId === "string") 
+            teacherId = mongoose.Types.ObjectId(teacherId);
+        if (typeof studentId === "string") 
+            studentId = mongoose.Types.ObjectId(studentId);
+
+        const result = await this.$listAggregate([
+            {
+                '$match': {
+                    'teacherId': teacherId, 
+                    'studentId': studentId,
+                    'startTime': {
+                        '$eq': time
+                    }, 
+                    'daysOfWeek': {
+                        '$in': daysOfWeek
+                    },
+                }
+            }, {
+                '$count': 'id'
+            }
+        ])
+
+        return result[0]?.id > 0
+    }
 }
 
 module.exports = ClassRepository

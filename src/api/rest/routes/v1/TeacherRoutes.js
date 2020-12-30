@@ -16,6 +16,17 @@ module.exports = (app, opts, done) => {
         }, 
         async (req, res) => await teacherController.getTeacher(req, res)
     );
+    
+    app.get(
+        '/teacher/list/classes/:id', 
+        { 
+            schema: {
+                tags: ['Teacher'],
+                params: idSchema.params
+            } 
+        }, 
+        async (req, res) => await teacherController.listTeacherClasses(req, res)
+    );
 
     app.post(
         '/teacher', 

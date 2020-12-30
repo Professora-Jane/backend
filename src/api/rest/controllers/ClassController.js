@@ -46,7 +46,7 @@ class ClassController {
         });
 
         res
-            .code(200)
+            .code(201)
             .send(response);
     }
 }
