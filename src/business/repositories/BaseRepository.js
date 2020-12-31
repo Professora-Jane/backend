@@ -46,16 +46,25 @@ class BaseRepository {
      * @param { Array<string> } [params.searchFields = []] - Array com as chaves (atributos) que serão considerados ao se realizar a busca
      * @param { string } [params.search = undefined ] - Termo que será buscado
      * @param { object } [params.itemQuery = []] - Pipeline que será executado. Opcional
+     * @param { object } [params.autoPopulateId = false] - Se o campo 'id' deve ser adicionado automáticamente. Opcional
      * @returns { boolean | object }
      */
-    async $paginate({ page, limit, searchFields = [], search = undefined, pipeline = [] }) {
+    async $paginate({ page, limit, searchFields = [], search = undefined, pipeline = [], autoPopulateId = false }) {
         const initialPipeline = [
             ...pipeline,
             ...(!!search.length ? [{
 				'$match': {
                     '$or': searchFields.map(field => ({ [field]: {'$regex': search, '$options': 'i'} }))
 				}
-            }] : [])
+            }] : []),
+            ...(autoPopulateId ? [{
+                '$addFields': {
+                    'id': {
+                        '$toString':'$_id'
+                    }
+                }
+            },] : []),
+            
         ]
 
         const totalOfItems = await this.$listAggregate([
