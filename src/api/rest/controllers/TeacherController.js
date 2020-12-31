@@ -30,8 +30,9 @@ class TeacherController {
      */    
     async listTeacherClasses(req, res) {
         const { id } = req.params
+        const { studentId = undefined } = req.query
 
-        const response = await this.teacherService.listTeacherClass({ teacherId: id });
+        const response = await this.teacherService.listTeacherClass({ teacherId: id, studentId });
 
         res
             .code(200)

@@ -22,7 +22,14 @@ module.exports = (app, opts, done) => {
         { 
             schema: {
                 tags: ['Teacher'],
-                params: idSchema.params
+                params: idSchema.params,
+                query: {
+                    studentId: { 
+                        type: 'string',
+                        minLength: 24,
+                        maxLength: 24
+                    },
+                }
             } 
         }, 
         async (req, res) => await teacherController.listTeacherClasses(req, res)

@@ -8,6 +8,11 @@ class TeacherRepository extends BaseRepository {
     }
 
     /**
+     * 
+     * @param { object } params
+     * @param { string } params.teacherId - Id do professor
+     * @param { string } [params.studentId = undefined] - Id do aluno 
+     * 
      * @typedef {Object} ClassList
      * @property {string} id - O id do processo
      * @property {boolean} active - se ativo ou não
@@ -24,9 +29,11 @@ class TeacherRepository extends BaseRepository {
      * @returns { Array<ClassList> }  O processo
      *  
      */
-    async listTeacherClasses({ teacherId }) {
+    async listTeacherClasses({ teacherId, studentId = undefined }) {
         if (typeof teacherId === "string")
             teacherId = Types.ObjectId(teacherId)
+        if (studentId && typeof studentId === "string")
+            studentId = Types.ObjectId(studentId)
 
         const classes = await this.$listAggregate([
             {
@@ -94,7 +101,12 @@ class TeacherRepository extends BaseRepository {
                 '$project': {
                     'student': 0
                 }
-            }
+            },
+            ...(studentId?  [{
+                '$match': {
+                    'studentId': studentId
+                }
+            }] : [])
         ])
 
         let result = false

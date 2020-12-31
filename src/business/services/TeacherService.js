@@ -11,6 +11,7 @@ class TeacherService extends BaseService {
         this.repository = new TeacherRepository();
     }
 
+
     async createTeacher({ name, email }) {
         const createdTeacher = await this.repository.$save({ name, email })
         
@@ -29,8 +30,8 @@ class TeacherService extends BaseService {
         return updatedTeacher;
     }
 
-    async listTeacherClass({ teacherId }) {
-        const classList = await this.repository.listTeacherClasses({ teacherId });
+    async listTeacherClass({ teacherId, studentId }) {
+        const classList = await this.repository.listTeacherClasses({ teacherId, studentId });
 
         if (!classList)
             throw new NotFoundException("Nenhuma classe encontrada para o professor informado", { teacherId })
