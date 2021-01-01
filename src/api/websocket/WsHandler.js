@@ -15,7 +15,7 @@ class WsHandler {
             wsConnectionsInstance.addSocket(ws)
         }
         else {
-            pubsub.publish(type, content)
+            pubsub.publish(type, [ws, content])
         }
     }
 
@@ -46,7 +46,7 @@ class WsHandler {
                             e.startsWith("on_")) return true;
                     })
                     .map(classMethod => {
-                        pubsub.subscribe(classMethod.replace("on_", ""), async (_, value) => await tempClass[classMethod](value))
+                        pubsub.subscribe(classMethod.replace("on_", ""), async (_, value) => await tempClass[classMethod](...value))
                     })
             }
         });

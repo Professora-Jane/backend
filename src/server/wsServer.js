@@ -23,25 +23,19 @@ class WsServer {
          * @type { function }
          * @public
          */
-        this.onMessageHandler
+        this.onConnectionHandler = undefined
 
         /**
          * @type { function }
          * @public
          */
-        this.onConnectionHandler
+        this.onMessageHandler = undefined
 
         /**
          * @type { function }
          * @public
          */
-        this.onMessageHandler
-
-        /**
-         * @type { function }
-         * @public
-         */
-        this.onCloseHandler
+        this.onCloseHandler = undefined
     }
 
     initServer(opts) {

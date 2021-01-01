@@ -30,8 +30,8 @@ const start = async () => {
             })
 
         wsServerInstance
-            .registerOnMessageHandler(wsHandlerInstance.messageHandler)
-            .registerOnCloseHandler(wsConnectionsInstance.removeSocket)
+            .registerOnMessageHandler((ws, req, msg) => wsHandlerInstance.messageHandler(ws, req, msg))
+            .registerOnCloseHandler((ws, req) => wsConnectionsInstance.removeSocket(ws, req))
             .initServer(config.webSocket);
     } 
     catch (err) {
