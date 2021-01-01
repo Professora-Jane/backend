@@ -7,7 +7,6 @@ class DateAndTimeUtils {
         return moment().utc(api.timezone).toDate()
     }
     
-
     /**
      * @description Função que compara duas horas informadas. O retorno é a diferença, em minutos, da hora inicial até a final.
      * Se igual a 0, as horas são iguais. Se menor que 0, a hora de início é superior à hora de fim, e se maior que 0 a hora de início

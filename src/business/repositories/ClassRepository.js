@@ -29,7 +29,7 @@ class ClassRepository extends BaseRepository {
     /**
      * 
      * @param {*} param0
-     * @returns { boolean } 
+     * @returns { Promise<boolean> } 
      */
     async checkIfTimeConflictsWithOtherClasses({ teacherId, time, daysOfWeek }) {
         if (typeof teacherId === "string") 
@@ -59,8 +59,8 @@ class ClassRepository extends BaseRepository {
 
     /**
      * 
-     * @param {*} param0
-     * @returns { boolean } 
+     * @param {*} param0s
+     * @returns { Promise<boolean> } 
      */
     async checkIfConflictsWithOtherClassesWithDiferentDiscipline({ teacherId, time, daysOfWeek, discipline }) {
         if (typeof teacherId === "string") 
@@ -93,7 +93,7 @@ class ClassRepository extends BaseRepository {
     /**
      * 
      * @param {*} param0
-     * @returns { boolean } 
+     * @returns { Promise<boolean> } 
      */
     async checkIfClassExists({ teacherId, time, daysOfWeek, studentId }) {
         if (typeof teacherId === "string") 

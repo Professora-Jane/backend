@@ -1,9 +1,18 @@
 const DateUtil = require("../lib/DateAndTimeUtil");
 const LogsModel = require("../models/LogsModel");
-const { Types, Mongoose } = require("mongoose");
+const { Types, Mongoose, Model } = require("mongoose");
 
 class BaseRepository {
+
+    /**
+     * 
+     * @param { Model<T> } schema 
+     */
     constructor(schema) {
+
+        /**
+         * @type { baseModel<schema> } model
+         */
         this.model = schema
         this.logSchema = LogsModel
     }
@@ -150,5 +159,7 @@ class BaseRepository {
  * @property { string } humanReadableMessage - Mensagem que será consumida pelo client descrevendo o log
  * @property { object } [payload = {}] - Payload adicional do log
  * 
+ * 
+ * @typedef { Model<T> } baseModel<T>
  */
 module.exports = BaseRepository

@@ -13,7 +13,7 @@ class TeacherRepository extends BaseRepository {
      * @param { string } params.teacherId - Id do professor
      * @param { string } [params.studentId = undefined] - Id do aluno 
      *
-     * @returns { Array<ClassList> }  O processo
+     * @returns { Promise<Array<ClassList>> }  O processo
      *  
      */
     async listTeacherClasses({ teacherId, studentId = undefined }, session ) {

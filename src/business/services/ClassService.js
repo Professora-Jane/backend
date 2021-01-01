@@ -53,7 +53,7 @@ class ClassService extends BaseService {
      * @param { Array<string|number> } params.daysOfWeek - Array de dias da semana os quais serão ministrados a disciplina
      * 
      * @throws { ConflictException } 
-     * @returns { true }
+     * @returns { Promise<true> }
      */
     async #validateOthersClassesByScheduleAndDiscipline({ startTime, teacherId, endTime, discipline, daysOfWeek, studentId }) {
         const actuallyExists = await this.repository.checkIfClassExists({
