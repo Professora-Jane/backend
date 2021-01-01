@@ -3,9 +3,16 @@ const createTeacherSchema = require("../../schemas/createTeacherSchema");
 const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const teacherController = new TeacherController();
+const fastify = require('fastify');
 
-
+/**
+ * 
+ * @param { fastify.FastifyInstance } app 
+ * @param {*} opts 
+ * @param {*} done 
+ */
 module.exports = (app, opts, done) => {
+
     app.get(
         '/teacher/:id', 
         { 
@@ -71,7 +78,7 @@ module.exports = (app, opts, done) => {
                         }
                     }
                 }, 
-                response: IdResponseSchema.response 
+                response: IdResponseSchema().response 
             }
         },
         async (req, res) => await teacherController.createTeacherStudent(req, res)
@@ -86,6 +93,24 @@ module.exports = (app, opts, done) => {
             }
         },
         async (req, res) => await teacherController.updateTeacher(req, res)
+    );
+
+    app.delete(
+        '/teacher/student/:teacherId/:studentId',
+        {
+            schema: {
+                tags: ['Teacher'],
+                params: {
+                    type: 'object',
+                    required: ['teacherId', 'studentId'],
+                    properties: {
+                        teacherId: { type: 'string' },
+                        studentId: { type: 'string' },
+                    }
+                }
+            }
+        },
+        async (req, res) => await teacherController.deleteTeacherStudent(req, res)
     );
     
     done()
