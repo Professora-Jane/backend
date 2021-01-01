@@ -3,6 +3,7 @@ const ConflictException = require("../lib/httpExceptions/ConflictException");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const TeacherStudentRepository = require("../repositories/TeacherStudentRepository");
 const BaseService = require("./BaseService");
+const ClassService = require("./ClassService");
 const StudentService = require("./StudentService");
 const TeacherService = require("./TeacherService");
 
@@ -12,6 +13,7 @@ class TeacherStudentService extends BaseService {
         this.repository = new TeacherStudentRepository();
         this.studentService = new StudentService();
         this.teacherService = new TeacherService();
+        this.classService = new ClassService();
     }
 
     async create({ teacherId, studentEmail = undefined, studentId = undefined }) {
@@ -39,10 +41,9 @@ class TeacherStudentService extends BaseService {
     }
 
     async getTeacherStudent({ teacherId, studentId }) {
-        if (typeof teacherId === "string")
-            teacherId = Types.ObjectId(teacherId)
-        if (typeof studentId === "string")
-            studentId = Types.ObjectId(studentId)
+
+        teacherId = this.repository.convertToObjectId(teacherId)
+        studentId = this.repository.convertToObjectId(studentId)
         
         const teacherStudent = await this.repository.$findOne({ teacherId, studentId })
 
@@ -52,6 +53,39 @@ class TeacherStudentService extends BaseService {
         return teacherStudent
     }
 
+
+    async deleteTeacherStudent({ teacherId, studentId }) {
+
+        // Encontrar teacherStudent
+        const teacherStudent = await this.getTeacherStudent({ studentId, teacherId });
+
+        const response = await this.executeTransaction(async (session) => {
+            // Encontrar todas as classes
+            const classes = await this.teacherService.repository.listTeacherClasses({ studentId, teacherId }, session)
+
+            if (classes) {
+                // remover todas as classes
+                const deleteClassesSuccess = await this.classService.repository.deleteStudentClasses({
+                    teacherId,
+                    studentId,
+                    idList: classes.map(item => item.id)
+                }, session)
+
+                if (!deleteClassesSuccess)
+                    throw new Error("Erro ao deletar classes do estudante")
+            }
+            
+            // Remover o teacherStudent
+            const deleteTeacherStudentSuccess = await this.repository.deleteTeacherStudent({ teacherStudent }, session)
+
+            if (!deleteTeacherStudentSuccess)
+                throw new Error("Erro ao deletar estudante do professor")
+
+            return true
+        });
+
+        return response;
+    }
     
 }
 

@@ -16,14 +16,8 @@ class ClassService extends BaseService {
         this.disciplineService = new DisciplineService();
     }
 
-    async create({ 
-        studentId,
-        teacherId,
-        startTime,
-        endTime,
-        daysOfWeek,
-        discipline
-    }) {
+    async create({ studentId, teacherId, startTime, endTime, daysOfWeek, discipline }) {
+        
         this.#validateClassSchedule({ startTime, endTime, daysOfWeek });
         await this.#validateOthersClassesByScheduleAndDiscipline({ startTime, teacherId, endTime, discipline, daysOfWeek, studentId });
 
