@@ -1,4 +1,5 @@
-const { Schema, Types } = require('mongoose');
+const { Schema } = require('mongoose');
+const { Types } = require('mongoose');
 const { dbInstance } = require("../../db")
 const DateUtil = require("../lib/DateAndTimeUtil")
 
