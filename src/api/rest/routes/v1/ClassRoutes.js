@@ -1,9 +1,16 @@
 const ClassController = require("../../controllers/ClassController");
 const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const idSchema = require("../../schemas/requests/IdSchemaRequest");
+const fastify = require('fastify');
 
 const classController = new ClassController();
 
+/**
+ * 
+ * @param { fastify.FastifyInstance } app 
+ * @param {*} opts 
+ * @param {*} done 
+ */
 module.exports = (app, opts, done) => {
 
     app.get(

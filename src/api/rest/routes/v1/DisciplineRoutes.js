@@ -2,9 +2,17 @@ const DisciplineController = require("../../controllers/DisciplineController");
 const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const DefaultPaginationQuery = require("../../schemas/requests/DefaultPaginationQuery");
+const fastify = require('fastify');
+
 const disciplineController = new DisciplineController();
 
 
+/**
+ * 
+ * @param { fastify.FastifyInstance } app 
+ * @param {*} opts 
+ * @param {*} done 
+ */
 module.exports = (app, opts, done) => {
     app.get(
         '/discipline/:id', 

@@ -6,9 +6,16 @@ const PaginatedResponseSchema = require("../../schemas/responses/PaginatedRespon
 const StudentSchemaResponseModel = require("../../schemas/responses/StudentSchemaResponseModel");
 const DefaultPaginationQuery = require("../../schemas/requests/DefaultPaginationQuery");
 const DefaultResponseModel = require("../../schemas/responses/DefaultResponseModel");
+const fastify = require('fastify');
 
 const studentController = new StudentController();
 
+/**
+ * 
+ * @param { fastify.FastifyInstance } app 
+ * @param {*} opts 
+ * @param {*} done 
+ */
 module.exports = (app, opts, done) => {
     
     app.get(
