@@ -84,6 +84,23 @@ class TeacherController {
             .code(200)
             .send();
     }
+
+    /**
+     * 
+     * @param { FastifyRequest } req 
+     * @param { FastifyReply } res 
+     */
+    async deleteTeacherStudent(req, res) {
+        const { teacherId, studentId } = req.params
+        
+        await this.teacherStudentService.deleteTeacherStudent({ teacherId, studentId })
+
+        res
+            .code(200)
+            .send();
+    }
+
+
 }
 
 module.exports = TeacherController;
