@@ -24,6 +24,35 @@ class Db {
 
         return this._mongoose.model(modelName, schema);
     }
+
+    /**
+     * @function executeTransaction Função responsável por executar uma transaction
+     * @param { callback } cb - Lógica a ser executada na transaction 
+     * 
+     * @callback callback 
+     * @param { mongoose.ClientSession }  session - Sessão criada para a transaction
+     */
+    async executeTransaction(cb) {
+        const session = await this._mongoose.startSession();
+        let response = undefined;
+
+        session.startTransaction();
+        
+        try {
+            response = await cb(session)
+
+            await session.commitTransaction();
+        } 
+        catch (error) {
+            await session.abortTransaction();
+            throw error;
+        } 
+        finally {
+            session.endSession();
+        }
+
+        return response;
+    }
 }
 
 
