@@ -1,8 +1,20 @@
-const DateUtil = require("../lib/DateAndTimeUtil")
+const DateUtil = require("../lib/DateAndTimeUtil");
+const LogsModel = require("../models/LogsModel");
+const { Types, Mongoose } = require("mongoose");
 
 class BaseRepository {
     constructor(schema) {
         this.model = schema
+        this.logSchema = LogsModel
+    }
+    /**
+     * @param { logDataModel } params 
+     */
+    async $logItem({ who, involved, action, model = undefined, humanReadableMessage, payload = {}  }, session) {
+        if (!model)
+            model = this.model.collection.collectionName
+
+        return await this.logSchema({ who, involved, action, model, humanReadableMessage, payload }).save({ session });
     }
 
     async $getById(id) {
@@ -32,10 +44,33 @@ class BaseRepository {
         return updatedItem;
     }
 
-    async $listAggregate(aggregationPipeline) {
-        const aggregatedPipeline = await this.model.aggregate(aggregationPipeline).exec();
+    /**
+     * 
+     * @param { object } params 
+     * @param { object } params.query - Query de deleção 
+     * @param { logDataModel } params.logData - Dados para criação de log 
+     */
+    async $deleteMany({ query, logData }, session) {
+        let deletedData = undefined
+
+        if (session)
+            deletedData = await this.model.deleteMany(query).session(session);
+        else
+            deletedData = await this.model.deleteMany(query);
+
+        if (deletedData.ok === 1) {
+            await this.$logItem({ ...logData }, session)
+            return true
+        }
         
-        return aggregatedPipeline;
+        return false
+    }
+
+    async $listAggregate(aggregationPipeline, session) {
+        if (session)
+            return await this.model.aggregate(aggregationPipeline).session(session).exec();
+
+        return await this.model.aggregate(aggregationPipeline).exec();
     }
 
     /**
@@ -97,6 +132,23 @@ class BaseRepository {
 
         return result;
     }
+
+    convertToObjectId(value) {
+        if (typeof value === "string")
+            value = Types.ObjectId(value)
+
+        return value
+    }
 }
 
+/**
+ * @typedef { object } logDataModel
+ * @property { Types.ObjectId } who - ObjectId de quem gerou a ação
+ * @property { Array<Types.ObjectId> } involved - Array de ObjectIds dos envolvidos
+ * @property { string } action - Ação realizada
+ * @property { string } [model = this.model.collection.collectionName ] - Collection na qual a ação foi realizada
+ * @property { string } humanReadableMessage - Mensagem que será consumida pelo client descrevendo o log
+ * @property { object } [payload = {}] - Payload adicional do log
+ * 
+ */
 module.exports = BaseRepository
