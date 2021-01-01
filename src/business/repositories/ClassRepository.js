@@ -7,6 +7,25 @@ class ClassRepository extends BaseRepository {
         super(ClassModel)
     }
 
+    async deleteStudentClasses({ teacherId, studentId, idList }, session) {
+        const query = { _id: { '$in': idList.map(this.convertToObjectId) } }
+        
+        /**
+         * @type { import("./BaseRepository").logDataModel }
+         */
+        const logData = {
+            action: 'delete',
+            humanReadableMessage: "Removeu dados do estudante",
+            involved: [ this.convertToObjectId(studentId) ],
+            who: this.convertToObjectId(teacherId),
+            payload: {query: JSON.stringify(query)}
+        }
+
+        const result = await this.$deleteMany({ query, logData }, session);
+
+        return result;
+    }
+
     /**
      * 
      * @param {*} param0

@@ -12,24 +12,11 @@ class TeacherRepository extends BaseRepository {
      * @param { object } params
      * @param { string } params.teacherId - Id do professor
      * @param { string } [params.studentId = undefined] - Id do aluno 
-     * 
-     * @typedef {Object} ClassList
-     * @property {string} id - O id do processo
-     * @property {boolean} active - se ativo ou não
-     * @property {number} daysOfWeek - Inteiro representando o dia de semana
-     * @property {string} studentId - Id do estudante 
-     * @property {string} teacherId - Id do professor 
-     * @property {number} startTime - Tempo, em minutos, de início da aula 
-     * @property {number} endTime - Tempo, em minutos, do final da aula 
-     * @property {string} discipline - Nome da disciplina
-     * @property {string} studentName - Nome do estudante
-     * @property {Date} creationDate - Data de criação do processStep
-     * @property {Date} lastUpdateDate - Data de última atualização do processStep
      *
      * @returns { Array<ClassList> }  O processo
      *  
      */
-    async listTeacherClasses({ teacherId, studentId = undefined }) {
+    async listTeacherClasses({ teacherId, studentId = undefined }, session ) {
         if (typeof teacherId === "string")
             teacherId = Types.ObjectId(teacherId)
         if (studentId && typeof studentId === "string")
@@ -107,7 +94,7 @@ class TeacherRepository extends BaseRepository {
                     'studentId': studentId
                 }
             }] : [])
-        ])
+        ], session)
 
         let result = false
 
@@ -118,4 +105,18 @@ class TeacherRepository extends BaseRepository {
     }
 }
 
+/**
+ * @typedef {Object} ClassList
+ * @property {string} id - O id do processo
+ * @property {boolean} active - se ativo ou não
+ * @property {number} daysOfWeek - Inteiro representando o dia de semana
+ * @property {string} studentId - Id do estudante 
+ * @property {string} teacherId - Id do professor 
+ * @property {number} startTime - Tempo, em minutos, de início da aula 
+ * @property {number} endTime - Tempo, em minutos, do final da aula 
+ * @property {string} discipline - Nome da disciplina
+ * @property {string} studentName - Nome do estudante
+ * @property {Date} creationDate - Data de criação do processStep
+ * @property {Date} lastUpdateDate - Data de última atualização do processStep
+ */
 module.exports = TeacherRepository
