@@ -5,8 +5,9 @@ class ChatController  extends BaseWsController {
         super()
     }
 
-    on_chat(value) {
+    ["on_chat:enter"](ws, value) {
         console.log(value)
+        ws.send('chat', { message: "qweqwe"})
     }
 }
 

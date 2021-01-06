@@ -1,5 +1,4 @@
 const ws = require("ws");
-const { IncomingMessage } = require("http");
 
 ws.prototype.oldSend = ws.prototype.send;
 

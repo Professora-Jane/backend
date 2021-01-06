@@ -1,9 +1,17 @@
 const pubsub = require("pubsub-js");
 const { wsConnectionsInstance } = require("./wsConnections");
 const fs = require("fs");
+const ws = require("ws");
+const { IncomingMessage } = require("http");
 
 class WsHandler {
 
+    /**
+     * 
+     * @param { ws }  ws - Instância atual do socket
+     * @param { IncomingMessage } req 
+     * @param { string } msg - mensagem stringficada
+     */
     messageHandler(ws, req, msg) {
 
         const { type, content } = JSON.parse(msg)
@@ -14,8 +22,11 @@ class WsHandler {
 
             wsConnectionsInstance.addSocket(ws)
         }
-        else {
+        else if (ws.id) {
             pubsub.publish(type, [ws, content])
+        }
+        else {
+            ws.close(1008, "Client não efetuou conexão")
         }
     }
 
