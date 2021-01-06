@@ -6,6 +6,10 @@ module.exports = {
     server: {
         logger: process.env.SERVER_LOGGER || true
     },
+    peer: {
+        port: process.env.PEER_PORT || 7113,
+        key: process.env.PEER_KEY
+    },
     db: {
         connectionString: process.env.DB_CONNECTION_STRING,
         options: {

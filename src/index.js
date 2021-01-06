@@ -6,7 +6,8 @@ const config = require("./config/config");
 const path = require('path');
 const { dbInstance } = require('./db');
 const { wsHandlerInstance } = require("./api/websocket/WsHandler")
-const { wsConnectionsInstance } = require("./api/websocket/wsConnections")
+const { wsConnectionsInstance } = require("./api/websocket/wsConnections");
+const { peerServerInstance } = require('./server/peerServer');
 
 // Run the server!
 const start = async () => {
@@ -21,7 +22,7 @@ const start = async () => {
             .registerRoutes({ routesPath: path.join(__dirname, './api/rest/routes/v1/'), prefix: 'api/v1' })
             .initServer(config.api);
 
-            restServerInstance.log.info(`server listening on ${ config.api.port }`)
+        restServerInstance.log.info(`server listening on ${ config.api.port }`)
         
         wsHandlerInstance
             .registerControllers({ 
@@ -33,6 +34,9 @@ const start = async () => {
             .registerOnMessageHandler((ws, req, msg) => wsHandlerInstance.messageHandler(ws, req, msg))
             .registerOnCloseHandler((ws, req) => wsConnectionsInstance.removeSocket(ws, req))
             .initServer(config.webSocket);
+            
+        peerServerInstance
+            .initServer(config.peer)
     } 
     catch (err) {
         restServerInstance.log.error(err)
