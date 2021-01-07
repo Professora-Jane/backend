@@ -1,6 +1,8 @@
 const NotFoundException = require("./httpExceptions/NotFoundException");
 const InvalidParamsException = require("./httpExceptions/InvalidParamsException");
 const ConflictException = require("./httpExceptions/ConflictException");
+const ForbiddenException = require("./httpExceptions/ForbiddenException");
+const UnauthorizedException = require("./httpExceptions/UnauthorizedException");
 
 module.exports = function(error, request, reply) {
     // Send error response
@@ -11,7 +13,15 @@ module.exports = function(error, request, reply) {
         ...(error.payload && {extension: error.payload})
     }
 
-    if (error instanceof NotFoundException) {
+    if (error instanceof UnauthorizedException) {
+        formattedError.status = 401
+        formattedError.error = "Unauthorized"
+    }
+    else if (error instanceof ForbiddenException) {
+        formattedError.status = 403
+        formattedError.error = "Forbidden"
+    }
+    else if (error instanceof NotFoundException) {
         formattedError.status = 404
         formattedError.error = "Not Found"
     }
