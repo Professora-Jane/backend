@@ -1,26 +1,35 @@
 module.exports = {
     api: {
-        port: process.env.PORT || 7111,
+        port: process.env.PORT,
         timezone: process.env.TZ
     },
     server: {
-        logger: process.env.SERVER_LOGGER || true
+        logger: process.env.SERVER_LOGGER
     },
     peer: {
-        port: process.env.PEER_PORT || 7113,
+        port: process.env.PEER_PORT,
         key: process.env.PEER_KEY
     },
     db: {
         connectionString: process.env.DB_CONNECTION_STRING,
         options: {
-            useNewUrlParser: process.env.MONGODB_USE_URL_PARSER || true,
-            useUnifiedTopology: process.env.MONGODB_USE_UNIFIED_TOPOLOGY || true
+            useNewUrlParser: process.env.MONGODB_USE_URL_PARSER,
+            useUnifiedTopology: process.env.MONGODB_USE_UNIFIED_TOPOLOGY 
         },
-        retryAttempts: 3,
-        retryTimeout: 5000
+        retryAttempts: process.env.MONGODB_RETRY_ATTEMPTS,
+        retryTimeout: process.env.MONGODB_RETRY_TIMEOUT
+    },
+    hash: {
+        saltRounds: 10
+    },
+    auth: {
+        secret: process.env.AUTH_SECRET,
+        jwtOptions: {
+            expiresIn: process.env.AUTH_JWT_EXPIRES_IN
+        }
     },
     webSocket: {
-        port: process.env.WS_PORT || 7112
+        port: process.env.WS_PORT
     },
     openApi: {
         routePrefix: '/documentation',
@@ -39,6 +48,7 @@ module.exports = {
             consumes: ['application/json'],
             produces: ['application/json'],
             tags: [
+                { name: 'Auth', description: 'Endpoints relacionados à ações autenticação' },
                 { name: 'Students', description: 'Endpoints relacionados à ações de estudantes' },
                 { name: 'Class', description: 'Endpoints relacionados à ações de classes' },
                 { name: 'Disciplines', description: 'Endpoints relacionados à ações de disciplinas' },
