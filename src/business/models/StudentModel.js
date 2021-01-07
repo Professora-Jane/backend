@@ -12,6 +12,10 @@ const StudentModel = new Schema({
         required: true,
         unique: true
     },
+    password: {
+        type: String,
+        required: true
+    },
     cellPhone: {
         type: String,
         required: true,

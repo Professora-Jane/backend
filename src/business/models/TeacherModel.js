@@ -12,6 +12,10 @@ const TeacherModel = new Schema({
         required: true,
         unique: true
     },
+    password: {
+        type: String,
+        required: true
+    },
     active: {
         default: true,
         type: Boolean,
