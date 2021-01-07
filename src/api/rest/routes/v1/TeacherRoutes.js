@@ -4,6 +4,7 @@ const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const teacherController = new TeacherController();
 const fastify = require('fastify');
+const { authMiddlewareInstance } = require("../../../../business/lib/auth/AuthMiddleware")
 
 /**
  * 
@@ -19,8 +20,12 @@ module.exports = (app, opts, done) => {
             schema: {
                 tags: ['Teacher'],
                 params: idSchema.params
-            } 
-        }, 
+            },
+            preHandler: [
+                authMiddlewareInstance.verifyToken,
+                authMiddlewareInstance.requireTeacher,
+            ]
+        },
         async (req, res) => await teacherController.getTeacher(req, res)
     );
     
@@ -48,7 +53,7 @@ module.exports = (app, opts, done) => {
             schema: { 
                 tags: ['Teacher'],
                 body: createTeacherSchema.body, 
-                response: IdResponseSchema.response 
+                response: IdResponseSchema().response 
             }
         },
         async (req, res) => await teacherController.createTeacher(req, res)

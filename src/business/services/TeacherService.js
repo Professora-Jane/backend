@@ -3,6 +3,9 @@ const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const TeacherRepository = require("../repositories/TeacherRepository");
 const BaseService = require("./BaseService");
+const InvalidParamsException = require("../lib/httpExceptions/InvalidParamsException");
+const { hashHandlerInstance } = require("../lib/auth/HashHandler");
+
 
 class TeacherService extends BaseService {
 
@@ -12,8 +15,12 @@ class TeacherService extends BaseService {
     }
 
 
-    async createTeacher({ name, email }) {
-        const createdTeacher = await this.repository.$save({ name, email })
+    async createTeacher({ name, email, password, repeatedPassword }) {
+        this.#validatePassword({ repeatedPassword,password })
+
+        const hashedPassword = await hashHandlerInstance.hashPassword(password)
+        
+        const createdTeacher = await this.repository.$save({ name, email, password: hashedPassword })
         
         return createdTeacher;
     }
@@ -21,9 +28,9 @@ class TeacherService extends BaseService {
     async updateTeacher({ name, email, active, id }) {
         const currentTeacher = await this.findById({ id })
 
-        currentTeacher.name = name ?? currentTeacher.name
-        currentTeacher.email = email ?? currentTeacher.email
-        currentTeacher.active = active ?? currentTeacher.active
+        currentTeacher.name = name || currentTeacher.name
+        currentTeacher.email = email || currentTeacher.email
+        currentTeacher.active = active || currentTeacher.active
 
         const updatedTeacher = await this.repository.$update(currentTeacher)
         
@@ -45,6 +52,14 @@ class TeacherService extends BaseService {
         })
 
         return classesWithTime;
+    }
+
+    #validatePassword({ password, repeatedPassword }) {
+        if (password !== repeatedPassword)
+            throw new InvalidParamsException("As senhas informadas não são iguais")
+        
+        if (password.length < 8) 
+        throw new InvalidParamsException("A senha deve ter no mínimo 8 caracteres")
     }
 }
 

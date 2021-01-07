@@ -91,7 +91,7 @@ class BaseRepository {
      * @param { string } [params.search = undefined ] - Termo que será buscado
      * @param { object } [params.itemQuery = []] - Pipeline que será executado. Opcional
      * @param { object } [params.autoPopulateId = false] - Se o campo 'id' deve ser adicionado automáticamente. Opcional
-     * @returns { boolean | object }
+     * @returns { Promise<boolean | object> }
      */
     async $paginate({ page, limit, searchFields = [], search = undefined, pipeline = [], autoPopulateId = false }) {
         const initialPipeline = [

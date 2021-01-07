@@ -45,9 +45,9 @@ class TeacherController {
      * @param { FastifyReply } res 
      */
     async createTeacher(req, res) {
-        const { name, email } = req.body
+        const { name, email, password, repeatedPassword } = req.body
         
-        const response = await this.teacherService.createTeacher({ name, email })
+        const response = await this.teacherService.createTeacher({ name, email, password, repeatedPassword })
         
         res
             .code(201)
