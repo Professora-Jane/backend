@@ -32,6 +32,10 @@ class AuthMiddleware {
      * @param { FastifyReply } res 
      */ 
     async verifyToken(req, res) {
+
+        if (!req.headers.authorization)
+            throw new UnauthorizedException("Token não informado");
+
         const token = req.headers.authorization.split("Bearer ")[1]
 
         if (!token)
