@@ -13,9 +13,9 @@ class AuthController {
      * @param { FastifyReply } res 
      */
     async loginUser(req, res) {
-        const { id, type, password } = req.body
+        const { email, id, type, password } = req.body
         
-        const response = await this.authService.authenticateUser({ id, type, password })
+        const response = await this.authService.authenticateUser({ email, id, type, password })
         
         res
             .code(200)

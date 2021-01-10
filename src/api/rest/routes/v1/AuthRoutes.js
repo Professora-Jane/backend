@@ -19,8 +19,12 @@ module.exports = (app, opts, done) => {
                 tags: ['Auth'],
                 body: {
                     type: 'object',
-                    required: ['id', 'type', 'password'],
+                    required: ['email', 'type', 'password'],
                     properties: {
+                        email: { 
+                            type: 'string',
+                            format: 'email'
+                        },
                         id: { 
                             type: 'string',
                             minLength: 24,
