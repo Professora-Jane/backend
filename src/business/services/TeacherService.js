@@ -54,6 +54,15 @@ class TeacherService extends BaseService {
         return classesWithTime;
     }
 
+    async getTeacherByEmail({ email }) {
+        const teacher = await this.repository.$findOne({ email });
+
+        if (!teacher)
+            throw new NotFoundException("Nenhum professor encontrado para o email informado", { email })
+
+        return teacher
+    }
+
     #validatePassword({ password, repeatedPassword }) {
         if (password !== repeatedPassword)
             throw new InvalidParamsException("As senhas informadas não são iguais")
@@ -61,6 +70,7 @@ class TeacherService extends BaseService {
         if (password.length < 8) 
         throw new InvalidParamsException("A senha deve ter no mínimo 8 caracteres")
     }
+
 }
 
 module.exports = TeacherService
