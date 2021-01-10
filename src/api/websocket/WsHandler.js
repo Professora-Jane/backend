@@ -19,11 +19,14 @@ class WsHandler {
         if (type === "connection") {
             // TODO alterar para receber o id do usuário via req;
             ws.id = content.id
+            ws.type = content.type
 
             wsConnectionsInstance.addSocket(ws)
+
+            ws.send("connectedToServer")
         }
         else if (ws.id) {
-            pubsub.publish(type, [ws, content])
+            pubsub.publish(type, [content, ws])
         }
         else {
             ws.close(1008, "Client não efetuou conexão")

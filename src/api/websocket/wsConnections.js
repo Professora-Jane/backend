@@ -59,7 +59,7 @@ class WsConnections {
     /**
      * @description Função responsável por obter um array de sockets a partir de um id fornecido.
      * @param { string } id - id do client
-     * @returns {{ Array<ws> | undefined }}
+     * @returns { Array<ws> | undefined }
      */
     getSockets(id) {
         const clientSockets = this.#CONNECTED_SOCKETS.get(id);
