@@ -9,6 +9,15 @@ const RoomModel = new Schema({
         ref: 'Teacher',
         required: true,
     },
+    name: {
+        type: String,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: [ "criado", "andamento", "finalizado" ]
+    },
     active: {
         type: Boolean,
         required: true,
