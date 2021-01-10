@@ -3,6 +3,7 @@ const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const RoomRepository = require("../repositories/RoomRepository");
+const { roomsManagerInstance } = require("../roomManager/RoomsManager");
 const BaseService = require("./BaseService");
 const TeacherService = require("./TeacherService");
 
@@ -30,7 +31,7 @@ class RoomService extends BaseService {
         return response;
     }
 
-    /**'
+    /**
      * 
      * @param { object } params 
      * @param { string| Types.ObjectId } params.id - Id da sala
@@ -43,6 +44,11 @@ class RoomService extends BaseService {
         
         if (!room)
             throw new NotFoundException("Sala não encontrada", { id })
+        
+        const roomDetails = roomsManagerInstance.getRoomDetails({ roomId: room.id })
+        
+        if (room.status === "andamento" && roomDetails)
+            room.details = roomDetails
 
         return room;
     }
@@ -55,6 +61,8 @@ class RoomService extends BaseService {
         room.status = "andamento"
 
         const updatedRoom = await this.repository.$update(room);
+
+        roomsManagerInstance.startRoom({ roomId: room.id, adminId: room.admin.toHexString() })
         
         return updatedRoom;
     }
