@@ -27,6 +27,8 @@ class BaseRepository {
     }
 
     async $getById(id) {
+        id = this.convertToObjectId(id)
+
         return await this.model.findOne({ _id: id })
     }
 
@@ -93,7 +95,7 @@ class BaseRepository {
      * @param { object } [params.autoPopulateId = false] - Se o campo 'id' deve ser adicionado automáticamente. Opcional
      * @returns { Promise<boolean | object> }
      */
-    async $paginate({ page, limit, searchFields = [], search = undefined, pipeline = [], autoPopulateId = false }) {
+    async $paginate({ page, limit, searchFields = [], search = "", pipeline = [], autoPopulateId = false }) {
         const initialPipeline = [
             ...pipeline,
             ...(!!search.length ? [{
@@ -160,6 +162,15 @@ class BaseRepository {
  * @property { object } [payload = {}] - Payload adicional do log
  * 
  * 
- * @typedef { Model<T> } baseModel<T>
+ */
+/**
+ * @template T
+ * @typedef { object } paginatedResponse
+ * @property { Array<T> } items - Array de itens paginados
+ * @property { number } numberOfItemsInPage - Número de itens na página atual
+ * @property { number } currentPage - Página atual
+ * @property { number } totalPages - Número total de páginas
+ * @property { number } totalItems - Número total de itens
+ * 
  */
 module.exports = BaseRepository
