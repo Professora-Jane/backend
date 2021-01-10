@@ -42,7 +42,11 @@ module.exports = (app, opts, done) => {
                         maxLength: 24
                     },
                 }
-            } 
+            },
+            preHandler: [
+                authMiddlewareInstance.verifyToken,
+                authMiddlewareInstance.requireTeacher,
+            ]
         }, 
         async (req, res) => await teacherController.listTeacherClasses(req, res)
     );
@@ -84,7 +88,11 @@ module.exports = (app, opts, done) => {
                     }
                 }, 
                 response: IdResponseSchema().response 
-            }
+            },
+            preHandler: [
+                authMiddlewareInstance.verifyToken,
+                authMiddlewareInstance.requireTeacher,
+            ]
         },
         async (req, res) => await teacherController.createTeacherStudent(req, res)
     );
@@ -113,7 +121,11 @@ module.exports = (app, opts, done) => {
                         studentId: { type: 'string' },
                     }
                 }
-            }
+            },
+            preHandler: [
+                authMiddlewareInstance.verifyToken,
+                authMiddlewareInstance.requireTeacher,
+            ]
         },
         async (req, res) => await teacherController.deleteTeacherStudent(req, res)
     );

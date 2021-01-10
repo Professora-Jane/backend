@@ -6,6 +6,7 @@ const PaginatedResponseSchema = require("../../schemas/responses/PaginatedRespon
 const StudentSchemaResponseModel = require("../../schemas/responses/StudentSchemaResponseModel");
 const DefaultPaginationQuery = require("../../schemas/requests/DefaultPaginationQuery");
 const DefaultResponseModel = require("../../schemas/responses/DefaultResponseModel");
+const { authMiddlewareInstance } = require("../../../../business/lib/auth/AuthMiddleware")
 const fastify = require('fastify');
 
 const studentController = new StudentController();
@@ -38,7 +39,10 @@ module.exports = (app, opts, done) => {
                 params: idSchema.params,
                 query: DefaultPaginationQuery,
                 response: PaginatedResponseSchema(StudentSchemaResponseModel).response
-            }
+            },
+            preHandler: [
+                authMiddlewareInstance.verifyToken
+            ]
         },
         async (req, res) => await studentController.listByTeacherId(req, res)
     );
