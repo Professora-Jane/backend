@@ -1,5 +1,6 @@
 const { Types, Model } = require("mongoose");
 const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
+const ConflictException = require("../lib/httpExceptions/ConflictException");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const RoomRepository = require("../repositories/RoomRepository");
 const BaseService = require("./BaseService");
@@ -12,12 +13,18 @@ class RoomService extends BaseService {
         this.teacherService = new TeacherService();
     }
 
-    async create({ teacherId }) {
-        const teacher = await this.teacherService.findById({ id: teacherId });
-
+    async create({ adminId, name }) {
+        
+        const currentRoom = await this.getCurrrentRoom({ adminId }, false)
+        
+        if (currentRoom)
+            throw new ConflictException("Já existe uma sala atual. Inicie ou finalize ela antes de criar uma nova");
+    
         const response = await this.repository.$save({
-            admin: teacher._id,
-            active: false
+            admin: adminId,
+            active: false,
+            name,
+            status: "criado"
         })
 
         return response;
@@ -32,7 +39,7 @@ class RoomService extends BaseService {
      */
     async findById({ id }) {
 
-        const room = await this.repository.$getById({ id });
+        const room = await this.repository.$getById(id);
         
         if (!room)
             throw new NotFoundException("Sala não encontrada", { id })
@@ -45,6 +52,7 @@ class RoomService extends BaseService {
 
         room.active = true;
         room.startTime = DateAndTimeUtils.getDateWithTz();
+        room.status = "andamento"
 
         const updatedRoom = await this.repository.$update(room);
         
@@ -56,12 +64,36 @@ class RoomService extends BaseService {
 
         room.active = false;
         room.endTime = DateAndTimeUtils.getDateWithTz();
+        room.status = "finalizado"
 
         const updatedRoom = await this.repository.$update(room);
         
         return updatedRoom;
     }
 
+    /**
+     * 
+     * @param { object } params
+     * @param { string } params.adminId ObjectiId do admin da reunião
+     * @param { boolean } [throwError = true] - Se a função deve lançar uma exceção ou somente retornar o valor encontrado
+     */
+    async getCurrrentRoom({ adminId }, throwError = true) {
+        const currentRoom = await this.repository.getCurrentRoom({ adminId })
+
+        if (!currentRoom && throwError)
+            throw new NotFoundException("Sala atual não encontrada");
+
+        return currentRoom
+    };
+
+    async listFinishedRooms({ page, limit, adminId }) {
+        const paginatedRooms = await this.repository.listFinishedRooms({ page, limit, adminId });
+
+        if(!paginatedRooms)
+        throw new NotFoundException("Não foram encontradas salas finalizadas");
+
+        return paginatedRooms
+    }
 }
 
 module.exports = RoomService
