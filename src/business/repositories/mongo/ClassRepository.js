@@ -1,4 +1,4 @@
-const ClassModel = require("../models/ClassModel");
+const ClassModel = require("../../models/ClassModel");
 const BaseRepository = require("./BaseRepository");
 const mongoose = require("mongoose");
 

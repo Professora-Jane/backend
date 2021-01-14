@@ -1,5 +1,5 @@
-const DateUtil = require("../lib/DateAndTimeUtil");
-const LogsModel = require("../models/LogsModel");
+const DateUtil = require("../../lib/DateAndTimeUtil");
+const LogsModel = require("../../models/LogsModel");
 const { Types, Mongoose, Model } = require("mongoose");
 
 class BaseRepository {

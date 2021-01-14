@@ -1,4 +1,4 @@
-const TeacherStudentModel = require("../models/TeacherStudentModel");
+const TeacherStudentModel = require("../../models/TeacherStudentModel");
 const BaseRepository = require("./BaseRepository");
 
 class TeacherStudentRepository extends BaseRepository {

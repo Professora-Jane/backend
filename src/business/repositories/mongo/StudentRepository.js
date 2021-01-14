@@ -1,5 +1,5 @@
 const BaseRepository = require("./BaseRepository");
-const StudentModel = require("../models/StudentModel");
+const StudentModel = require("../../models/StudentModel");
 const { Types } = require("mongoose");
 
 class StudentRepository extends BaseRepository {

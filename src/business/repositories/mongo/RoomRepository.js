@@ -1,5 +1,5 @@
 const { Types } = require("mongoose");
-const RoomModel = require("../models/RoomModel");
+const RoomModel = require("../../models/RoomModel");
 const BaseRepository = require("./BaseRepository");
 
 class RoomRepository extends BaseRepository {

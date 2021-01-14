@@ -1,5 +1,5 @@
 const BaseRepository = require("./BaseRepository");
-const DisciplineModel = require("../models/DisciplineModel");
+const DisciplineModel = require("../../models/DisciplineModel");
 
 class DisciplineRepository extends BaseRepository {
     constructor() {
