@@ -4,7 +4,7 @@ const TeacherService = require("./TeacherService");
 const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const InvalidParamsException = require("../lib/httpExceptions/InvalidParamsException");
 const DisciplineService = require("./DisciplineService");
-const ClassRepository = require("../repositories/ClassRepository");
+const ClassRepository = require("../repositories/mongo/ClassRepository");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 
 class ClassService extends BaseService {

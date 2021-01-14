@@ -1,5 +1,5 @@
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
-const StudentRepository = require("../repositories/StudentRepository");
+const StudentRepository = require("../repositories/mongo/StudentRepository");
 const BaseService = require("./BaseService");
 
 class StudentService extends BaseService {

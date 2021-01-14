@@ -1,7 +1,7 @@
 const { Types } = require("mongoose");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
-const TeacherStudentRepository = require("../repositories/TeacherStudentRepository");
+const TeacherStudentRepository = require("../repositories/mongo/TeacherStudentRepository");
 const BaseService = require("./BaseService");
 const ClassService = require("./ClassService");
 const StudentService = require("./StudentService");

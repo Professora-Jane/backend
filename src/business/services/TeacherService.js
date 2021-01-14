@@ -1,7 +1,7 @@
 const { tz } = require("moment-timezone");
 const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
-const TeacherRepository = require("../repositories/TeacherRepository");
+const TeacherRepository = require("../repositories/mongo/TeacherRepository");
 const BaseService = require("./BaseService");
 const InvalidParamsException = require("../lib/httpExceptions/InvalidParamsException");
 const { hashHandlerInstance } = require("../lib/auth/HashHandler");
