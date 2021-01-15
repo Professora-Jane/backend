@@ -1,37 +1,22 @@
 const { wsConnectionsInstance } = require("../../api/websocket/wsConnections");
 const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
+const CurrentRoomRepository = require("../repositories/redis/CurrentRoomRepository");
 
-// TODO substituir essa implementação em memória por uma utilizando o REDIS
-class RoomsManager {
-    /**
-     * @typedef { object } participant
-     * @property { string } name Nome do participante
-     * @property { string } id Id do participante
-     */
+class RoomManagerService  {
+    constructor() {
+        this.roomsRepository = new CurrentRoomRepository()
+    }
     
-    /**
-     * @typedef { object } roomDescription
-     * @property { Array<participant> } currentParticipants - participantes atualmente na sala
-     * @property { Array<participant> } banned - Array de participantes banidos
-     * @property { string } admin - ObjectId do admin da sala
-     * @property { Date } startTime - Tempo de inicio da sala
-     * @property { Date? } endTime - Tempo de fechamento da sala
-     */
-
-    /** 
-     * @type {Map<string, roomDescription>}
-     */
-    #rooms = new Map();
-    
-    startRoom({ roomId, adminId }) {
-        const currentRoom = this.#rooms.get(roomId);
+    async startRoom({ roomId, adminId }) {
+        const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         // Não faço nada caso a sala já exista
         if (currentRoom)
             return false
 
-        this.#rooms.set(roomId, {
+        await this.roomsRepository.$save({
+            roomId,
             currentParticipants: [],
             banned: [],
             admin: adminId,
@@ -41,8 +26,8 @@ class RoomsManager {
         return true
     }
 
-    addParticipant({ roomId, participantId, participantName }) {
-        const currentRoom = this.#rooms.get(roomId);
+    async addParticipant({ roomId, participantId, participantName }) {
+        const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (!currentRoom)
             return false
@@ -55,11 +40,13 @@ class RoomsManager {
             name: participantName
         })
 
+        await this.roomsRepository.$update(currentRoom);
+
         return true
     }
 
-    removeParticipant({ roomId, participantId }) {
-        const currentRoom = this.#rooms.get(roomId);
+    async removeParticipant({ roomId, participantId }) {
+        const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (!currentRoom)
             return false
@@ -68,12 +55,16 @@ class RoomsManager {
 
         if (participantIndex === -1)
             return false 
+
+        const removed = currentRoom.currentParticipants.splice(participantIndex, 1)
+
+        await this.roomsRepository.$update(currentRoom);
         
-        return currentRoom.currentParticipants.splice(participantIndex, 1)
+        return removed 
     }
 
-    banParticipant({ roomId, participantId }) {
-        const currentRoom = this.#rooms.get(roomId);
+    async banParticipant({ roomId, participantId }) {
+        const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (!currentRoom)
             return false
@@ -82,11 +73,13 @@ class RoomsManager {
 
         currentRoom.banned.push(participantId)
 
+        await this.roomsRepository.$update(currentRoom);
+        
         return true
     }
 
-    unBanParticipant({ roomId, participantId }) {
-        const currentRoom = this.#rooms.get(roomId);
+    async unBanParticipant({ roomId, participantId }) {
+        const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (!currentRoom)
             return false
@@ -98,6 +91,8 @@ class RoomsManager {
         
         currentRoom.banned.splice(participantIndex, 1)
 
+        await this.roomsRepository.$update(currentRoom);
+
         return true
     }
 
@@ -107,8 +102,8 @@ class RoomsManager {
      * 
      * @returns { roomDescription } 
      */
-    getRoomDetails({ roomId }) {
-        const currentRoom = this.#rooms.get(roomId);
+    async getRoomDetails({ roomId }) {
+        const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (!currentRoom)
             return false
@@ -116,17 +111,17 @@ class RoomsManager {
         return currentRoom
     }
 
-    finishRoom({ roomId }) {
-        const currentRoom = this.#rooms.get(roomId);
+    async finishRoom({ roomId }) {
+        const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (currentRoom)
-            this.#rooms.delete(roomId)
+            await this.roomsRepository.$deleteOne(currentRoom)
 
         return true
     }
 
-    broadcastMessageToRoom({ roomId, type, content }) {
-        const currentRoom = this.#rooms.get(roomId);
+    async broadcastMessageToRoom({ roomId, type, content }) {
+        const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (!currentRoom)
             return false
@@ -141,8 +136,4 @@ class RoomsManager {
     }
 }
 
-const instance = new RoomsManager();
-
-module.exports = {
-    roomsManagerInstance: (() => instance)()
-}
+module.exports = RoomManagerService
