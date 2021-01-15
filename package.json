@@ -28,8 +28,10 @@
     "jsonwebtoken": "^8.5.1",
     "moment-timezone": "^0.5.32",
     "mongoose": "^5.11.8",
+    "nohm": "^2.2.3",
     "peer": "^0.6.1",
     "pubsub-js": "^1.9.2",
+    "redis": "^3.0.2",
     "schema-object": "^4.0.11",
     "ws": "^7.4.1"
   },
