@@ -33,9 +33,13 @@ class RoomController {
         
         const response = await this.roomService.findById({ id })
         
+        const jsonToSend = response.toJSON()
+
+        jsonToSend.details = response.details
+
         res
             .code(200)
-            .send(response);
+            .send(jsonToSend);
     }
 
     /**

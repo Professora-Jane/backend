@@ -12,9 +12,9 @@ class RoomController  extends BaseWsController {
         super()
     }
 
-    [ROOM_JOIN]({ roomId, participantId, participantName }) {
-        if(roomsManagerInstance.addParticipant({ roomId, participantId, participantName }))    
-        roomsManagerInstance.broadcastMessageToRoom({
+    async [ROOM_JOIN]({ roomId, participantId, participantName }) {
+        if(await roomsManagerInstance.addParticipant({ roomId, participantId, participantName }))    
+        await roomsManagerInstance.broadcastMessageToRoom({
             roomId,
             type: ROOM_PARTICIPANT_JOIN,
             content: {
@@ -27,10 +27,10 @@ class RoomController  extends BaseWsController {
         })
     }
     
-    [ROOM_LEAVE]({ roomId, participantId }) {
-        const removedParticipant = roomsManagerInstance.removeParticipant({ roomId, participantId })
+    async [ROOM_LEAVE]({ roomId, participantId }) {
+        const removedParticipant = await roomsManagerInstance.removeParticipant({ roomId, participantId })
         if(removedParticipant)    
-            roomsManagerInstance.broadcastMessageToRoom({
+            await roomsManagerInstance.broadcastMessageToRoom({
                 roomId,
                 type: ROOM_PARTICIPANT_LEAVE,
                 content: {
@@ -43,9 +43,9 @@ class RoomController  extends BaseWsController {
             })
     }
     
-    [ROOM_CHAT]({ roomId, participantId, participantName, messageContent }) {
+    async [ROOM_CHAT]({ roomId, participantId, participantName, messageContent }) {
 
-        roomsManagerInstance.broadcastMessageToRoom({
+        await roomsManagerInstance.broadcastMessageToRoom({
             roomId,
             type: ROOM_CHAT.replace("on_", ""),
             content: {
