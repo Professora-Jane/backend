@@ -3,8 +3,8 @@ const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const RoomRepository = require("../repositories/mongo/RoomRepository");
-const { roomsManagerInstance } = require("../roomManager/RoomsManager");
 const BaseService = require("./BaseService");
+const RoomManagerService = require("./RoomManagerService");
 const TeacherService = require("./TeacherService");
 
 class RoomService extends BaseService {
@@ -12,6 +12,7 @@ class RoomService extends BaseService {
         super()
         this.repository = new RoomRepository();
         this.teacherService = new TeacherService();
+        this.roomManagerService = new RoomManagerService();
     }
 
     async create({ adminId, name }) {
@@ -45,7 +46,7 @@ class RoomService extends BaseService {
         if (!room)
             throw new NotFoundException("Sala não encontrada", { id })
         
-        const roomDetails = roomsManagerInstance.getRoomDetails({ roomId: room.id })
+        const roomDetails = await this.roomManagerService.getRoomDetails({ roomId: room.id })
         
         if (room.status === "andamento" && roomDetails)
             room.details = roomDetails
@@ -62,7 +63,7 @@ class RoomService extends BaseService {
 
         const updatedRoom = await this.repository.$update(room);
 
-        roomsManagerInstance.startRoom({ roomId: room.id, adminId: room.admin.toHexString() })
+        await this.roomManagerService.startRoom({ roomId: room.id, adminId: room.admin.toHexString() })
         
         return updatedRoom;
     }
