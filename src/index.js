@@ -8,13 +8,17 @@ const { dbInstance } = require('./db');
 const { wsHandlerInstance } = require("./api/websocket/WsHandler")
 const { wsConnectionsInstance } = require("./api/websocket/wsConnections");
 const { peerServerInstance } = require('./server/peerServer');
+const { redisDbInstance } = require('./db/redis');
 
 // Run the server!
 const start = async () => {
     try {
         await dbInstance.connect(config.db);
+
+        await redisDbInstance
+            .config(config.redis)
+            .connect({ prefix: "professoraJane" });
         
-        //
         await restServerInstance
             .configureServer(config.server)
             .configureSwagger(config.openApi)

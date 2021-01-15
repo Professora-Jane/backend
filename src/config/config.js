@@ -7,8 +7,7 @@ module.exports = {
         logger: process.env.SERVER_LOGGER
     },
     peer: {
-        port: process.env.PEER_PORT,
-        key: process.env.PEER_KEY
+        port: process.env.PEER_PORT
     },
     db: {
         connectionString: process.env.DB_CONNECTION_STRING,
@@ -18,6 +17,9 @@ module.exports = {
         },
         retryAttempts: process.env.MONGODB_RETRY_ATTEMPTS,
         retryTimeout: process.env.MONGODB_RETRY_TIMEOUT
+    },
+    redis: {
+        port: process.env.REDIS_PORT
     },
     hash: {
         saltRounds: 10
