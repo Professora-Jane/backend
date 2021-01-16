@@ -7,7 +7,6 @@ const path = require('path');
 const { dbInstance } = require('./db');
 const { wsHandlerInstance } = require("./api/websocket/WsHandler")
 const { wsConnectionsInstance } = require("./api/websocket/wsConnections");
-const { peerServerInstance } = require('./server/peerServer');
 const { redisDbInstance } = require('./db/redis');
 
 // Run the server!
@@ -38,9 +37,6 @@ const start = async () => {
             .registerOnMessageHandler((ws, req, msg) => wsHandlerInstance.messageHandler(ws, req, msg))
             .registerOnCloseHandler((ws, req) => wsConnectionsInstance.removeSocket(ws, req))
             .initServer(config.webSocket);
-            
-        peerServerInstance
-            .initServer(config.peer)
     } 
     catch (err) {
         restServerInstance.log.error(err)
