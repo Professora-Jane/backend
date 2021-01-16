@@ -1,4 +1,5 @@
 module.exports = {
+    nodeEnv: process.env.NODE_ENV,
     api: {
         port: process.env.PORT,
         timezone: process.env.TZ
