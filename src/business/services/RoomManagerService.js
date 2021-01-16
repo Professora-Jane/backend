@@ -35,12 +35,15 @@ class RoomManagerService  {
         if (currentRoom.banned.includes(participantId))
             throw new ConflictException("Usuário banido!!")
 
-        currentRoom.currentParticipants.push({
-            id: participantId,
-            name: participantName
-        })
+        if (currentRoom.currentParticipants.findIndex(item => item.id === participantId) === -1) {
+            currentRoom.currentParticipants.push({
+                id: participantId,
+                name: participantName
+            })
 
-        await this.roomsRepository.$update(currentRoom);
+            await this.roomsRepository.$update(currentRoom);
+
+        }
 
         return true
     }
@@ -127,9 +130,11 @@ class RoomManagerService  {
             return false
         
         currentRoom.currentParticipants.map(participant => {
-            wsConnectionsInstance.getSockets(participant.id).map(ws => {
-                ws.send(type, content)
-            })
+            if (wsConnectionsInstance.getSockets(participant.id)) {
+                wsConnectionsInstance.getSockets(participant.id).map(ws => {
+                    ws.send(type, content)
+                })
+            } 
         })
 
         return true
