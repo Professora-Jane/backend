@@ -15,18 +15,19 @@ class RoomController  extends BaseWsController {
     }
 
     async [ROOM_JOIN]({ roomId, participantId, participantName }) {
-        if(await this.roomManagerService.addParticipant({ roomId, participantId, participantName }))    
-        await this.roomManagerService.broadcastMessageToRoom({
-            roomId,
-            type: ROOM_PARTICIPANT_JOIN,
-            content: {
-                user: {
-                    name: participantName,
-                    id: participantId
+        if(await this.roomManagerService.addParticipant({ roomId, participantId, participantName })) {
+            await this.roomManagerService.broadcastMessageToRoom({
+                roomId,
+                type: ROOM_PARTICIPANT_JOIN,
+                content: {
+                    user: {
+                        name: participantName,
+                        id: participantId
+                    },
                 },
-                currentUsers: this.roomManagerService.getRoomDetails({ roomId }).currentParticipants
-            }
-        })
+                appendCurrentParticipants: true
+            })
+        }
     }
     
     async [ROOM_LEAVE]({ roomId, participantId }) {
@@ -40,14 +41,17 @@ class RoomController  extends BaseWsController {
                         name: removedParticipant[0].name,
                         id: removedParticipant[0].id
                     },
-                    currentUsers: this.roomManagerService.getRoomDetails({ roomId }).currentParticipants
-                }
+                    currentUsers: await this.roomManagerService.getRoomDetails({ roomId }).currentParticipants
+                },
+                appendCurrentParticipants: true
             })
     }
     
-    async [ROOM_PEER_OFFER]({ offer, participantId, roomId }) {
+    async [ROOM_PEER_OFFER]({ offer, participantId, roomId, sendToSelf =  false }) {
         await this.roomManagerService.broadcastMessageToRoom({
             roomId,
+            sendToSelf,
+            selfId: participantId,
             type: ROOM_PEER_OFFER.replace("on_", ""),
             content: { offer, participantId }
         })

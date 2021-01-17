@@ -123,17 +123,32 @@ class RoomManagerService  {
         return true
     }
 
-    async broadcastMessageToRoom({ roomId, type, content }) {
+    async broadcastMessageToRoom({ roomId, type, content, selfId = undefined, sendToSelf = true, appendCurrentParticipants = false }) {
         const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (!currentRoom)
             return false
+
+        if (appendCurrentParticipants)
+            content.currentParticipants = currentRoom.currentParticipants
         
         currentRoom.currentParticipants.map(participant => {
             if (wsConnectionsInstance.getSockets(participant.id)) {
-                wsConnectionsInstance.getSockets(participant.id).map(ws => {
-                    ws.send(type, content)
-                })
+                
+
+                if(!sendToSelf) {
+                    if (selfId !== participant.id) {
+                        wsConnectionsInstance.getSockets(participant.id).map(ws => {
+                            ws.send(type, content)
+                        })
+                    }
+                }
+                else {
+                    wsConnectionsInstance.getSockets(participant.id).map(ws => {
+                        ws.send(type, content)
+                    })
+                }
+
             } 
         })
 
