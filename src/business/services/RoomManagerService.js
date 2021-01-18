@@ -9,7 +9,7 @@ class RoomManagerService  {
     }
     
     async startRoom({ roomId, adminId }) {
-        const currentRoom = await this.roomsRepository.$findOne({ roomId });
+        const currentRoom = await this.getRoomDetails({ roomId });
 
         // Não faço nada caso a sala já exista
         if (currentRoom)
@@ -27,7 +27,7 @@ class RoomManagerService  {
     }
 
     async addParticipant({ roomId, participantId, participantName }) {
-        const currentRoom = await this.roomsRepository.$findOne({ roomId });
+        const currentRoom = await this.getRoomDetails({ roomId });
 
         if (!currentRoom)
             return false
@@ -49,7 +49,7 @@ class RoomManagerService  {
     }
 
     async removeParticipant({ roomId, participantId }) {
-        const currentRoom = await this.roomsRepository.$findOne({ roomId });
+        const currentRoom = await this.getRoomDetails({ roomId });
 
         if (!currentRoom)
             return false
@@ -67,7 +67,7 @@ class RoomManagerService  {
     }
 
     async banParticipant({ roomId, participantId }) {
-        const currentRoom = await this.roomsRepository.$findOne({ roomId });
+        const currentRoom = await this.getRoomDetails({ roomId });
 
         if (!currentRoom)
             return false
@@ -82,7 +82,7 @@ class RoomManagerService  {
     }
 
     async unBanParticipant({ roomId, participantId }) {
-        const currentRoom = await this.roomsRepository.$findOne({ roomId });
+        const currentRoom = await this.getRoomDetails({ roomId });
 
         if (!currentRoom)
             return false
@@ -102,8 +102,6 @@ class RoomManagerService  {
     /**
      * 
      * @param {*} param0
-     * 
-     * @returns { roomDescription } 
      */
     async getRoomDetails({ roomId }) {
         const currentRoom = await this.roomsRepository.$findOne({ roomId });
@@ -115,7 +113,7 @@ class RoomManagerService  {
     }
 
     async finishRoom({ roomId }) {
-        const currentRoom = await this.roomsRepository.$findOne({ roomId });
+        const currentRoom = await this.getRoomDetails({ roomId });
 
         if (currentRoom)
             await this.roomsRepository.$deleteOne(currentRoom)
@@ -124,7 +122,7 @@ class RoomManagerService  {
     }
 
     async broadcastMessageToRoom({ roomId, type, content, selfId = undefined, sendToSelf = true, appendCurrentParticipants = false }) {
-        const currentRoom = await this.roomsRepository.$findOne({ roomId });
+        const currentRoom = await this.getRoomDetails({ roomId });
 
         if (!currentRoom)
             return false
@@ -151,7 +149,6 @@ class RoomManagerService  {
 
             } 
         })
-
         return true
     }
 }

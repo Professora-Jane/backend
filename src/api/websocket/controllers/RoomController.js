@@ -1,4 +1,5 @@
 const RoomManagetService = require("../../../business/services/RoomManagerService")
+const { wsConnectionsInstance } = require("../wsConnections")
 const BaseWsController = require("./BaseController")
 
 const ROOM_JOIN = "on_room:join"
@@ -47,14 +48,20 @@ class RoomController  extends BaseWsController {
             })
     }
     
-    async [ROOM_PEER_OFFER]({ offer, participantId, roomId, sendToSelf =  false }) {
-        await this.roomManagerService.broadcastMessageToRoom({
-            roomId,
-            sendToSelf,
-            selfId: participantId,
-            type: ROOM_PEER_OFFER.replace("on_", ""),
-            content: { offer, participantId }
-        })
+    async [ROOM_PEER_OFFER]({ offer, participantId, roomId, to }) {
+        const room = await this.roomManagerService.getRoomDetails({ roomId })
+
+        if (room && room.currentParticipants.length) {
+            room.currentParticipants
+                .filter(participant => participant.id === to)
+                .map(participant => {
+                    if (wsConnectionsInstance.getSockets(participant.id)) {
+                        wsConnectionsInstance.getSockets(participant.id).map(ws => {
+                            ws.send(ROOM_PEER_OFFER.replace("on_", ""), { offer, participantId })
+                        })
+                    } 
+                })
+        }
     }
     
     async [ROOM_CHAT]({ roomId, participantId, participantName, messageContent }) {
