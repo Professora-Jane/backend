@@ -3,6 +3,7 @@ const InvalidParamsException = require("./httpExceptions/InvalidParamsException"
 const ConflictException = require("./httpExceptions/ConflictException");
 const ForbiddenException = require("./httpExceptions/ForbiddenException");
 const UnauthorizedException = require("./httpExceptions/UnauthorizedException");
+const BadRequestException = require("./httpExceptions/BadRequestException");
 
 module.exports = function(error, request, reply) {
     // Send error response
@@ -13,7 +14,13 @@ module.exports = function(error, request, reply) {
         ...(error.payload && {extension: error.payload})
     }
 
-    if (error instanceof UnauthorizedException) {
+    if (error instanceof BadRequestException ||
+        error instanceof InvalidParamsException 
+        || error.validation) {
+        formattedError.status = 400
+        formattedError.error = "Bad Request"
+    }
+    else if (error instanceof UnauthorizedException) {
         formattedError.status = 401
         formattedError.error = "Unauthorized"
     }
@@ -28,12 +35,6 @@ module.exports = function(error, request, reply) {
     else if (error instanceof ConflictException) {
         formattedError.status = 409
         formattedError.error = "Conflict"
-    }
-    else if (
-        error instanceof InvalidParamsException 
-        || error.validation ){
-        formattedError.error = "Bad Request"
-        formattedError.status = 400
     }
 
     reply
