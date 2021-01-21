@@ -30,9 +30,11 @@ class RoomRepository extends BaseRepository {
      * 
      * @returns {Promise<import("./BaseRepository").paginatedResponse<room>>} 
      */
-    async listFinishedRooms({ adminId, page, limit }) {
+    async listFinishedRooms({ adminId, page, limit, search, sort, sortType }) {
         if (typeof adminId === "string")
             adminId = Types.ObjectId(adminId);
+
+        const searchFields = [ "name", "status" ]
                 
         const pipeline = [
             {
@@ -45,7 +47,7 @@ class RoomRepository extends BaseRepository {
             }
         ]
 
-        const response = await this.$paginate({ page, limit, pipeline })
+        const response = await this.$paginate({ page, limit, pipeline, search, searchFields, sort, sortType })
 
         return response;
     }

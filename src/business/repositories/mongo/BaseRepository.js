@@ -93,12 +93,14 @@ class BaseRepository {
      * @param { string } [params.search = undefined ] - Termo que será buscado
      * @param { object } [params.itemQuery = []] - Pipeline que será executado. Opcional
      * @param { object } [params.autoPopulateId = false] - Se o campo 'id' deve ser adicionado automáticamente. Opcional
+     * @param { object } [params.sort = undefined] - Chave de ordenação. Opcional
+     * @param { object } [params.sortType = false] - Tipo de ordenação. Valor deve ser 1 || -1. Opcional
      * @returns { Promise<boolean | object> }
      */
-    async $paginate({ page, limit, searchFields = [], search = "", pipeline = [], autoPopulateId = false }) {
+    async $paginate({ page, limit, searchFields = [], search = "", pipeline = [], autoPopulateId = false, sort = undefined, sortType = -1 }) {
         const initialPipeline = [
             ...pipeline,
-            ...(!!search.length ? [{
+            ...(!!search ? [{
 				'$match': {
                     '$or': searchFields.map(field => ({ [field]: {'$regex': search, '$options': 'i'} }))
 				}
@@ -109,8 +111,7 @@ class BaseRepository {
                         '$toString':'$_id'
                     }
                 }
-            },] : []),
-            
+            },] : [])
         ]
 
         const totalOfItems = await this.$listAggregate([
@@ -122,7 +123,12 @@ class BaseRepository {
 
         const itemList = await this.$listAggregate([
             ...initialPipeline,
-			{
+            ...(!!sort ? [{
+                '$sort': {
+                    [sort]: sortType
+                }
+            }]: []),
+            {
                 '$skip': Number(limit) * (Number(page) - 1)
             }, {
                 '$limit': Number(limit)
