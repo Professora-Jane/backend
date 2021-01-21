@@ -43,7 +43,6 @@ module.exports = (app, opts, done) => {
                 tags: ['Room'],
                 params: IdSchemaRequest.params,
                 query: DefaultPaginationQuery,
-
             }
         },
         async (req, res) => await roomController.listFinishedRooms(req, res)
@@ -70,6 +69,17 @@ module.exports = (app, opts, done) => {
             }
         },
         async (req, res) => await roomController.startRoom(req, res)
+    );
+
+    app.put(
+        '/room/finish/:id', 
+        { 
+            schema: { 
+                tags: ['Room'],
+                params: IdSchemaRequest.params
+            }
+        },
+        async (req, res) => await roomController.finishRoom(req, res)
     );
 
     done()

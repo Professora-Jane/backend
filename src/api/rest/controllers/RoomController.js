@@ -22,6 +22,21 @@ class RoomController {
             .code(201)
             .send(response);
     }
+    
+    /**
+     * 
+     * @param { FastifyRequest } req 
+     * @param { FastifyReply } res 
+     */
+    async finishRoom(req, res) {
+        const { id } = req.params
+        
+        await this.roomService.finishRoom({ id })
+
+        res
+            .code(200)
+            .send();
+    }
 
     /**
      * 
@@ -50,7 +65,7 @@ class RoomController {
     async getCurrentRoom(req, res) {
         const { id } = req.params
         
-        const response = await this.roomService.getCurrrentRoom({ adminId: id })
+        const response = await this.roomService.getCurrentRoom({ adminId: id })
         
         res
             .code(200)
@@ -79,9 +94,9 @@ class RoomController {
      */
     async listFinishedRooms(req, res) {
         const { id } = req.params
-        const { page = 1, limit = 20 } = req.params
+        const { page = 1, limit = 20, search = "", sort = "", sortType = 0 } = req.query
         
-        const response = await this.roomService.listFinishedRooms({ adminId: id, page, limit })
+        const response = await this.roomService.listFinishedRooms({ adminId: id, page, limit, search, sort, sortType })
         
         res
             .code(200)
