@@ -1,13 +1,16 @@
 const RoomManagetService = require("../../../business/services/RoomManagerService")
 const { wsConnectionsInstance } = require("../wsConnections")
 const BaseWsController = require("./BaseController")
+const {
+    ROOM_JOIN,
+    ROOM_LEAVE,
+    ROOM_CHAT,
+    ROOM_PEER_OFFER,
+    ROOM_PARTICIPANT_JOIN,
+    ROOM_PARTICIPANT_LEAVE,
+} = require("../topics/eventTopics")
 
-const ROOM_JOIN = "on_room:join"
-const ROOM_LEAVE = "on_room:leave"
-const ROOM_CHAT = "on_room:chat"
-const ROOM_PEER_OFFER = "on_room:peerOffer"
-const ROOM_PARTICIPANT_JOIN = "room:participantJoin"
-const ROOM_PARTICIPANT_LEAVE = "room:participantLeave"
+
 
 class RoomController  extends BaseWsController {
     constructor() {
@@ -57,7 +60,7 @@ class RoomController  extends BaseWsController {
                 .map(participant => {
                     if (wsConnectionsInstance.getSockets(participant.id)) {
                         wsConnectionsInstance.getSockets(participant.id).map(ws => {
-                            ws.send(ROOM_PEER_OFFER.replace("on_", ""), { offer, participantId })
+                            ws.send(ROOM_PEER_OFFER, { offer, participantId })
                         })
                     } 
                 })
@@ -68,7 +71,7 @@ class RoomController  extends BaseWsController {
 
         await this.roomManagerService.broadcastMessageToRoom({
             roomId,
-            type: ROOM_CHAT.replace("on_", ""),
+            type: ROOM_CHAT,
             content: {
                 senderId: participantId,
                 name: participantName,
