@@ -1,5 +1,6 @@
-const { Types, Model } = require("mongoose");
+const { Types } = require("mongoose");
 const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
+const BadRequestException = require("../lib/httpExceptions/BadRequestException");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const RoomRepository = require("../repositories/mongo/RoomRepository");
@@ -17,7 +18,7 @@ class RoomService extends BaseService {
 
     async create({ adminId, name }) {
         
-        const currentRoom = await this.getCurrrentRoom({ adminId }, false)
+        const currentRoom = await this.getCurrentRoom({ adminId }, false)
         
         if (currentRoom)
             throw new ConflictException("Já existe uma sala atual. Inicie ou finalize ela antes de criar uma nova");
@@ -71,12 +72,18 @@ class RoomService extends BaseService {
     async finishRoom({ id }) {
         const room = await this.findById({ id });
 
+        if (room.status === "finalizado")
+            throw new BadRequestException("Sala já finalizada!!")
+
+        
         room.active = false;
         room.endTime = DateAndTimeUtils.getDateWithTz();
         room.status = "finalizado"
 
+        await this.roomManagerService.finishRoom({ roomId: id })
+
         const updatedRoom = await this.repository.$update(room);
-        
+
         return updatedRoom;
     }
 
@@ -86,7 +93,7 @@ class RoomService extends BaseService {
      * @param { string } params.adminId ObjectiId do admin da reunião
      * @param { boolean } [throwError = true] - Se a função deve lançar uma exceção ou somente retornar o valor encontrado
      */
-    async getCurrrentRoom({ adminId }, throwError = true) {
+    async getCurrentRoom({ adminId }, throwError = true) {
         const currentRoom = await this.repository.getCurrentRoom({ adminId })
 
         if (!currentRoom && throwError)
@@ -95,8 +102,8 @@ class RoomService extends BaseService {
         return currentRoom
     };
 
-    async listFinishedRooms({ page, limit, adminId }) {
-        const paginatedRooms = await this.repository.listFinishedRooms({ page, limit, adminId });
+    async listFinishedRooms({ page, limit, adminId, search, sort, sortType }) {
+        const paginatedRooms = await this.repository.listFinishedRooms({ page, limit, adminId, search, sort, sortType });
 
         if(!paginatedRooms)
         throw new NotFoundException("Não foram encontradas salas finalizadas");

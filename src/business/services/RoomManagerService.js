@@ -1,3 +1,4 @@
+const { ROOM_FINISH } = require("../../api/websocket/topics/eventTopics");
 const { wsConnectionsInstance } = require("../../api/websocket/wsConnections");
 const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
@@ -22,6 +23,22 @@ class RoomManagerService  {
             admin: adminId,
             startTime: DateAndTimeUtils.getDateWithTz()
         })
+
+        return true
+    }
+
+    async finishRoom({ roomId }) {
+        const currentRoom = await this.getRoomDetails({ roomId });
+
+        if (!currentRoom)
+            return false
+        
+        await this.broadcastMessageToRoom({
+            roomId,
+            type: ROOM_FINISH
+        })
+
+        await this.roomsRepository.$deleteOne(currentRoom)
 
         return true
     }
@@ -112,17 +129,20 @@ class RoomManagerService  {
         return currentRoom
     }
 
-    async finishRoom({ roomId }) {
-        const currentRoom = await this.getRoomDetails({ roomId });
-
-        if (currentRoom)
-            await this.roomsRepository.$deleteOne(currentRoom)
-
-        return true
-    }
-
+    /**
+     * 
+     * @param { object } params 
+     * @param { String } params.roomId Id da sala
+     * @param { String } params.type Tópico que será enviado aos clients
+     * @param { String } [params.selfId] Id do sender
+     * @param { Boolean } [params.sendToSelf] Se a mensagem deve ser enviada ao sender 
+     * @param { Boolean } [params.appendCurrentParticipants] Se deve-se adicionar a lista de participantes atuais no conteúdo da mensagem 
+     */
     async broadcastMessageToRoom({ roomId, type, content, selfId = undefined, sendToSelf = true, appendCurrentParticipants = false }) {
         const currentRoom = await this.getRoomDetails({ roomId });
+
+        if (type.includes("on_"))
+            type = type.replace("on_", "")
 
         if (!currentRoom)
             return false
