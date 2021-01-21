@@ -3,6 +3,10 @@ const ws = require("ws");
 ws.prototype.oldSend = ws.prototype.send;
 
 ws.prototype.send = function(eventName, payload)  {
+
+    if (eventName.includes("on_"))
+        eventName = eventName.replace("on_", "")
+        
     const message = {
         type: eventName,
         content: payload
