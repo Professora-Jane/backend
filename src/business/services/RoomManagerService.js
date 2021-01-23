@@ -21,6 +21,7 @@ class RoomManagerService  {
             currentParticipants: [],
             banned: [],
             admin: adminId,
+            canvasStatus: false,
             startTime: DateAndTimeUtils.getDateWithTz()
         })
 
@@ -58,11 +59,15 @@ class RoomManagerService  {
                 name: participantName
             })
 
-            await this.roomsRepository.$update(currentRoom);
+            await this.updateRoom(currentRoom);
 
         }
 
         return true
+    }
+
+    async updateRoom(room) {
+        await this.roomsRepository.$update(room)
     }
 
     async removeParticipant({ roomId, participantId }) {
@@ -78,7 +83,7 @@ class RoomManagerService  {
 
         const removed = currentRoom.currentParticipants.splice(participantIndex, 1)
 
-        await this.roomsRepository.$update(currentRoom);
+        await this.updateRoom(currentRoom);
         
         return removed 
     }
@@ -93,7 +98,7 @@ class RoomManagerService  {
 
         currentRoom.banned.push(participantId)
 
-        await this.roomsRepository.$update(currentRoom);
+        await this.updateRoom(currentRoom);
         
         return true
     }
@@ -111,7 +116,7 @@ class RoomManagerService  {
         
         currentRoom.banned.splice(participantIndex, 1)
 
-        await this.roomsRepository.$update(currentRoom);
+        await this.updateRoom(currentRoom);
 
         return true
     }
@@ -121,12 +126,29 @@ class RoomManagerService  {
      * @param {*} param0
      */
     async getRoomDetails({ roomId }) {
+
+        /**
+         * @type {import("../repositories/redis/CurrentRoomRepository").Room}
+         */
         const currentRoom = await this.roomsRepository.$findOne({ roomId });
 
         if (!currentRoom)
             return false
 
         return currentRoom
+    }
+
+    async updateCanvasStatus({ roomId, canvasStatus }) {
+        const currentRoom = await this.getRoomDetails({ roomId });
+
+        if (!currentRoom)
+            return false
+
+        currentRoom.canvasStatus = canvasStatus
+
+        await this.updateRoom(currentRoom)
+
+        return true
     }
 
     /**
