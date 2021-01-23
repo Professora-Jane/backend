@@ -33,7 +33,6 @@ class BaseRepository {
     /**
      * 
      * @param { object } query
-     * @returns { Room } 
      */
     async $findOne(query) {
         const result = await this.model.find(query)
@@ -59,11 +58,4 @@ class BaseRepository {
     }
 }
 
-/**
- * @typedef {Object} Room
- * @property {string} id - O id do processo
- * @property {Array<{ name: string, id: string }>} currentParticipants - Array de participantes ativos
- * @property {Array<String>} banned - Array de pessoas banidas da sala
- * @property {string} admin - Id do admin da sala 
- */
 module.exports = BaseRepository
