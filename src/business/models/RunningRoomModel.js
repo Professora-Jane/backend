@@ -21,6 +21,9 @@ CurrentRoomModel.definitions = {
     },
     startTime: {
         type: "string"
+    },
+    canvasStatus: {
+        type: "boolean"
     }
 }
 
