@@ -8,7 +8,10 @@ const {
     ROOM_PEER_OFFER,
     ROOM_PARTICIPANT_JOIN,
     ROOM_PARTICIPANT_LEAVE,
+    ROOM_CANVAS,
+    ROOM_CANVAS_DATA,
 } = require("../topics/eventTopics")
+const { CLOSING } = require("ws")
 
 
 
@@ -79,6 +82,46 @@ class RoomController  extends BaseWsController {
                 type: "message"
             }
         })
+    }
+    
+    async [ROOM_CANVAS]({ roomId, canvasStatus }) {
+
+        if (await this.roomManagerService.updateCanvasStatus({ roomId, canvasStatus })) {
+            await this.roomManagerService.broadcastMessageToRoom({
+                roomId,
+                type: ROOM_CANVAS,
+                content: {
+                    canvasStatus
+                }
+            })
+        }
+    }
+
+    async [ROOM_CANVAS_DATA]({ roomId, data, to }) {
+        if (to) {
+            const room = await this.roomManagerService.getRoomDetails({ roomId })
+
+            if (room && room.currentParticipants.length) {
+                room.currentParticipants
+                    .filter(participant => participant.id === to)
+                    .map(participant => {
+                        if (wsConnectionsInstance.getSockets(participant.id)) {
+                            wsConnectionsInstance.getSockets(participant.id).map(ws => {
+                                ws.send(ROOM_CANVAS_DATA, { offer, participantId })
+                            })
+                        } 
+                    })
+            }
+        }
+        else {
+            await this.roomManagerService.broadcastMessageToRoom({
+                roomId,
+                type: ROOM_CANVAS_DATA,
+                content: {
+                    data
+                }
+            })
+        }
     }
 }
 
