@@ -2,13 +2,13 @@
 /**
  * Room events
  */
-const ROOM_JOIN = "on_room:join"
-const ROOM_LEAVE = "on_room:leave"
-const ROOM_CHAT = "on_room:chat"
-const ROOM_PEER_OFFER = "on_room:peerOffer"
-const ROOM_FINISH = "on_room:finish"
-const ROOM_CANVAS_DATA = "on_room:canvasData"
-const ROOM_CANVAS = "on_room:canvas"
+const ROOM_JOIN = "room:join"
+const ROOM_LEAVE = "room:leave"
+const ROOM_CHAT = "room:chat"
+const ROOM_PEER_OFFER = "room:peerOffer"
+const ROOM_FINISH = "room:finish"
+const ROOM_CANVAS_DATA = "room:canvasData"
+const ROOM_CANVAS = "room:canvas"
 const ROOM_PARTICIPANT_JOIN = "room:participantJoin"
 const ROOM_PARTICIPANT_LEAVE = "room:participantLeave"
 

@@ -2,15 +2,13 @@ const ws = require("ws");
 
 ws.prototype.oldSend = ws.prototype.send;
 
-ws.prototype.send = function(eventName, payload)  {
-
-    if (eventName.includes("on_"))
-        eventName = eventName.replace("on_", "")
-        
+ws.prototype.send = function(eventName, payload)  {        
+    
     const message = {
         type: eventName,
         content: payload
     }
+
     ws.prototype.oldSend.apply(this, [JSON.stringify(message)]);
 }
 
