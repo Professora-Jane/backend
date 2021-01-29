@@ -1,11 +1,13 @@
 const TeacherService = require("../../../business/services/TeacherService")
 const { FastifyReply, FastifyRequest } = require("fastify");
 const TeacherStudentService = require("../../../business/services/TeacherStudentService");
+const ClassService = require("../../../business/services/ClassService");
 
 class TeacherController {
     constructor() {
         this.teacherService = new TeacherService();
         this.teacherStudentService = new TeacherStudentService();
+        this.classService = new ClassService();
     }
 
     /**
@@ -32,7 +34,7 @@ class TeacherController {
         const { id } = req.params
         const { studentId = undefined } = req.query
 
-        const response = await this.teacherService.listTeacherClass({ teacherId: id, studentId });
+        const response = await this.classService.listTeacherClasses({ teacherId: id, studentId });
 
         res
             .code(200)

@@ -4,7 +4,9 @@ const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const teacherController = new TeacherController();
 const fastify = require('fastify');
-const { authMiddlewareInstance } = require("../../../../business/lib/auth/AuthMiddleware")
+const { authMiddlewareInstance } = require("../../../../business/lib/auth/AuthMiddleware");
+const TeacherSchemaResponseModel = require("../../schemas/responses/TeacherSchemaResponseModel");
+const ClassResponseSchema = require("../../schemas/responses/ClassResponseSchema");
 
 /**
  * 
@@ -19,11 +21,17 @@ module.exports = (app, opts, done) => {
         { 
             schema: {
                 tags: ['Teacher'],
-                params: idSchema.params
+                params: idSchema.params,
+                response: {
+                    '200': {
+                        type: 'object',
+                        description: "Rota de obtenção dos dados de um professor",
+                        properties: TeacherSchemaResponseModel
+                    }
+                }
             },
             preHandler: [
-                authMiddlewareInstance.verifyToken,
-                authMiddlewareInstance.requireTeacher,
+                authMiddlewareInstance.verifyToken
             ]
         },
         async (req, res) => await teacherController.getTeacher(req, res)
@@ -41,6 +49,15 @@ module.exports = (app, opts, done) => {
                         minLength: 24,
                         maxLength: 24
                     },
+                },
+                response: {
+                    '200': {
+                        type: 'array',
+                        items: {
+                            type: 'object',
+                            properties: ClassResponseSchema
+                        }
+                    }
                 }
             },
             preHandler: [
