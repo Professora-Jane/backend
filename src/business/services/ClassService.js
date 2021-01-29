@@ -6,6 +6,7 @@ const InvalidParamsException = require("../lib/httpExceptions/InvalidParamsExcep
 const DisciplineService = require("./DisciplineService");
 const ClassRepository = require("../repositories/mongo/ClassRepository");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
+const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 
 class ClassService extends BaseService {
     constructor() {
@@ -113,6 +114,69 @@ class ClassService extends BaseService {
             throw new InvalidParamsException("A hora de início deve ser menor que a hora de fim!", { startTime, endTime })
         
         return true
+    }
+
+    /**
+     * 
+     * @param { object } params 
+     * @param { string } params.studentId - Id do estudante
+     * @param { string } params.teacherId - Id do professor 
+     */
+    async getStudentClasses({ studentId, teacherId }) {
+        
+        const result = await this.#listClasses({
+            ids: { studentId, ...(teacherId && { teacherId })},
+            matchIdKey: "studentId",
+            ...(teacherId && {restrictionIdKey: "teacherId"}),
+            errorContent: {
+                message: "Nenhuma classe encontrada para o aluno informado",
+                payload: {
+                    studentId, teacherId
+                }
+            }
+        })
+
+        return result;
+    }
+    
+    /**
+     * 
+     * @param { object } params 
+     * @param { string } params.studentId - Id do estudante
+     * @param { string } params.teacherId - Id do professor 
+     */
+    async listTeacherClasses({ studentId, teacherId }) {
+        
+        const result = await this.#listClasses({
+            ids: { teacherId, ...(studentId && { studentId })},
+            matchIdKey: "teacherId",
+            ...(studentId && {restrictionIdKey: "studentId"}),
+            errorContent: {
+                message: "Nenhuma classe encontrada para o aluno informado",
+                payload: {
+                    studentId, teacherId
+                }
+            }
+        })
+
+        return result;
+    }
+
+    async #listClasses({ ids, matchIdKey, restrictionIdKey = undefined, errorContent }) {
+        const result = await this.repository.getClasses({ ids, matchIdKey, restrictionIdKey });
+
+        if (!result.length)
+            throw new NotFoundException(errorContent.message, errorContent.payload )
+
+        const classesWithTime = result.map(item => {
+
+            item.startTime = DateAndTimeUtils.getTimestampFromMinutesAndDayIndex(item.startTime, item.daysOfWeek)
+            item.endTime = DateAndTimeUtils.getTimestampFromMinutesAndDayIndex(item.endTime, item.daysOfWeek)
+
+            return item
+        })
+
+        return classesWithTime
     }
 }
 
