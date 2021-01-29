@@ -35,7 +35,7 @@ module.exports = {
         port: process.env.WS_PORT
     },
     openApi: {
-        routePrefix: '/documentation',
+        routePrefix: '/docs',
         swagger: {
             info: {
                 title: 'Test swagger',
