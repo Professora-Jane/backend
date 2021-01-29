@@ -1,9 +1,6 @@
-const { tz } = require("moment-timezone");
-const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const TeacherRepository = require("../repositories/mongo/TeacherRepository");
 const BaseService = require("./BaseService");
-const InvalidParamsException = require("../lib/httpExceptions/InvalidParamsException");
 const { hashHandlerInstance } = require("../lib/auth/HashHandler");
 
 
@@ -16,7 +13,7 @@ class TeacherService extends BaseService {
 
 
     async createTeacher({ name, email, password, repeatedPassword }) {
-        this.#validatePassword({ repeatedPassword,password })
+        hashHandlerInstance.validatePassword({ repeatedPassword,password })
 
         const hashedPassword = await hashHandlerInstance.hashPassword(password)
         
@@ -37,23 +34,6 @@ class TeacherService extends BaseService {
         return updatedTeacher;
     }
 
-    async listTeacherClass({ teacherId, studentId }) {
-        const classList = await this.repository.listTeacherClasses({ teacherId, studentId });
-
-        if (!classList)
-            throw new NotFoundException("Nenhuma classe encontrada para o professor informado", { teacherId })
-        
-        const classesWithTime = classList.map(item => {
-
-            item.startTime = DateAndTimeUtils.getTimestampFromMinutesAndDayIndex(item.startTime, item.daysOfWeek)
-            item.endTime = DateAndTimeUtils.getTimestampFromMinutesAndDayIndex(item.endTime, item.daysOfWeek)
-
-            return item
-        })
-
-        return classesWithTime;
-    }
-
     async getTeacherByEmail({ email }) {
         const teacher = await this.repository.$findOne({ email });
 
@@ -62,15 +42,6 @@ class TeacherService extends BaseService {
 
         return teacher
     }
-
-    #validatePassword({ password, repeatedPassword }) {
-        if (password !== repeatedPassword)
-            throw new InvalidParamsException("As senhas informadas não são iguais")
-        
-        if (password.length < 8) 
-        throw new InvalidParamsException("A senha deve ter no mínimo 8 caracteres")
-    }
-
 }
 
 module.exports = TeacherService
