@@ -8,6 +8,8 @@ const DefaultPaginationQuery = require("../../schemas/requests/DefaultPagination
 const DefaultResponseModel = require("../../schemas/responses/DefaultResponseModel");
 const { authMiddlewareInstance } = require("../../../../business/lib/auth/AuthMiddleware")
 const fastify = require('fastify');
+const TeacherSchemaResponseModel = require("../../schemas/responses/TeacherSchemaResponseModel");
+const ClassResponseSchema = require("../../schemas/responses/ClassResponseSchema");
 
 const studentController = new StudentController();
 
@@ -45,6 +47,52 @@ module.exports = (app, opts, done) => {
             ]
         },
         async (req, res) => await studentController.listByTeacherId(req, res)
+    );
+    
+    app.get(
+        '/student/list/teachers/:id', 
+        { 
+            schema: { 
+                tags: ['Students'],
+                params: idSchema.params,
+                query: DefaultPaginationQuery,
+                response: PaginatedResponseSchema(TeacherSchemaResponseModel).response
+            },
+            preHandler: [
+                authMiddlewareInstance.verifyToken
+            ]
+        },
+        async (req, res) => await studentController.listTeachers(req, res)
+    );
+    
+    app.get(
+        '/student/list/classes/:id', 
+        { 
+            schema: { 
+                tags: ['Students'],
+                params: idSchema.params,
+                query: {
+                    teacherId: {
+                        type: 'string',
+                        minLength: 24,
+                        maxLength: 24
+                    }
+                },
+                response: {
+                    '200': {
+                        type: 'array',
+                        items: {
+                            type: 'object',
+                            properties: ClassResponseSchema
+                        }
+                    }
+                }
+            },
+            preHandler: [
+                authMiddlewareInstance.verifyToken
+            ]
+        },
+        async (req, res) => await studentController.listClasses(req, res)
     );
 
     app.post(

@@ -1,3 +1,4 @@
+const { hashHandlerInstance } = require("../lib/auth/HashHandler");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");
 const StudentRepository = require("../repositories/mongo/StudentRepository");
 const BaseService = require("./BaseService");
@@ -8,8 +9,12 @@ class StudentService extends BaseService {
         this.repository = new StudentRepository();
     }
 
-    async createStudent({ name, email, cellPhone }) {
-        const createdStudent = await this.repository.$save({ name, email, cellPhone })
+    async createStudent({ name, email, cellPhone, password, repeatedPassword }) {
+        hashHandlerInstance.validatePassword({ repeatedPassword, password })
+
+        const hashedPassword = await hashHandlerInstance.hashPassword(password);
+
+        const createdStudent = await this.repository.$save({ name, email, cellPhone, password: hashedPassword })
 
         return createdStudent
     }
@@ -41,6 +46,15 @@ class StudentService extends BaseService {
 
         if (!response) 
             throw new NotFoundException("Nenhum aluno encontrado para os termos fornecidos", { page, limit, search, teacherId })
+        
+        return response;
+    }
+
+    async listTeachers({ page, limit, search, studentId }) {
+        const response = await this.repository.listTeachers({ page, limit, search, studentId });
+
+        if (!response) 
+            throw new NotFoundException("Nenhum professor encontrado para o aluno informado", { page, limit, search, studentId })
         
         return response;
     }
