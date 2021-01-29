@@ -2,6 +2,7 @@ const ClassController = require("../../controllers/ClassController");
 const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const fastify = require('fastify');
+const ClassResponseSchema = require("../../schemas/responses/ClassResponseSchema");
 
 const classController = new ClassController();
 
@@ -18,7 +19,15 @@ module.exports = (app, opts, done) => {
         { 
             schema: { 
                 tags: ['Class'],
-                params: idSchema.params
+                params: idSchema.params,
+                response: {
+                    response: {
+                        '200': {
+                            type: 'object',
+                            properties: ClassResponseSchema
+                        }
+                    }
+                }
             }
         },
         async (req, res) => await classController.getClass(req, res)
