@@ -4,6 +4,7 @@ const NohmModel = require('nohm').NohmModel;
 class CurrentRoomModel extends NohmModel {
 
 }
+
 CurrentRoomModel.modelName = "CurrentRoom"
 CurrentRoomModel.definitions = {
     roomId: {
