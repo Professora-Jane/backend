@@ -1,7 +1,6 @@
 const { Schema, Types } = require('mongoose');
 const { dbInstance } = require("../../db");
-const DateAndTimeUtils = require('../lib/DateAndTimeUtil');
-const DateUtil = require("../lib/DateAndTimeUtil")
+const DateAndTimeUtils = require('../utils/DateAndTimeUtil');
 
 const ClassModel = new Schema({
     studentId: {
@@ -40,12 +39,12 @@ const ClassModel = new Schema({
     },
     creationDate: {
         type: Date,
-        default: () => DateUtil.getDateWithTz()
+        default: () => DateAndTimeUtils.getDateWithTz()
 
     },
     lastUpdateDate: {
         type: Date,
-        default: () => DateUtil.getDateWithTz()
+        default: () => DateAndTimeUtils.getDateWithTz()
     }
 }, { 
     collection: 'class',

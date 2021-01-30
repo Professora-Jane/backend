@@ -1,7 +1,7 @@
 const { Schema } = require('mongoose');
 const { Types } = require('mongoose');
 const { dbInstance } = require("../../db")
-const DateUtil = require("../lib/DateAndTimeUtil")
+const DateUtil = require("../utils/DateAndTimeUtil")
 
 const RoomModel = new Schema({
     admin: {

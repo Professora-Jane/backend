@@ -1,4 +1,4 @@
-const DateUtil = require("../../lib/DateAndTimeUtil");
+const DateUtil = require("../../utils/DateAndTimeUtil");
 const LogsModel = require("../../models/LogsModel");
 const { Types, Model } = require("mongoose");
 
@@ -95,7 +95,7 @@ class BaseRepository {
      * @param { object } [params.autoPopulateId = false] - Se o campo 'id' deve ser adicionado automáticamente. Opcional
      * @param { object } [params.sort = undefined] - Chave de ordenação. Opcional
      * @param { object } [params.sortType = false] - Tipo de ordenação. Valor deve ser 1 || -1. Opcional
-     * @returns { Promise<boolean | object> }
+     * @returns { Promise<boolean | paginatedResponse> }
      */
     async $paginate({ page, limit, searchFields = [], search = "", pipeline = [], autoPopulateId = false, sort = undefined, sortType = -1 }) {
         const initialPipeline = [

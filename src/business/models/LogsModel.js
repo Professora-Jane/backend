@@ -1,6 +1,6 @@
 const { Schema, Types } = require('mongoose');
 const { dbInstance } = require("../../db")
-const DateUtil = require("../lib/DateAndTimeUtil")
+const DateUtil = require("../utils/DateAndTimeUtil")
 
 const LogsModel = new Schema({
     who: {

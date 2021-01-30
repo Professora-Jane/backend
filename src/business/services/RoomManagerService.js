@@ -1,6 +1,6 @@
 const { ROOM_FINISH } = require("../../api/websocket/topics/eventTopics");
 const { wsConnectionsInstance } = require("../../api/websocket/wsConnections");
-const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
+const DateAndTimeUtils = require("../utils/DateAndTimeUtil");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 const CurrentRoomRepository = require("../repositories/redis/CurrentRoomRepository");
 

@@ -1,5 +1,5 @@
 const { Types } = require("mongoose");
-const DateAndTimeUtils = require("../lib/DateAndTimeUtil");
+const DateAndTimeUtils = require("../utils/DateAndTimeUtil");
 const BadRequestException = require("../lib/httpExceptions/BadRequestException");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 const NotFoundException = require("../lib/httpExceptions/NotFoundException");

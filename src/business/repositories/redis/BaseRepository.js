@@ -1,5 +1,4 @@
 const NohmModel = require('nohm').NohmModel;
-const { Types } = require("mongoose");
 
 
 class BaseRepository {
