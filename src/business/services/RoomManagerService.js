@@ -1,8 +1,9 @@
 const { ROOM_FINISH } = require("../../api/websocket/topics/eventTopics");
-const { wsConnectionsInstance } = require("../../api/websocket/wsConnections");
+const { workerPoolInstance } = require("../../business/lib/workers/WorkerPool");
 const DateAndTimeUtils = require("../utils/DateAndTimeUtil");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 const CurrentRoomRepository = require("../repositories/redis/CurrentRoomRepository");
+const { wsConnectionsInstance } = require("../../api/websocket/wsConnections");
 
 class RoomManagerService  {
     constructor() {
@@ -163,34 +164,29 @@ class RoomManagerService  {
     async broadcastMessageToRoom({ roomId, type, content, selfId = undefined, sendToSelf = true, appendCurrentParticipants = false }) {
         const currentRoom = await this.getRoomDetails({ roomId });
 
-        if (type.includes("on_"))
-            type = type.replace("on_", "")
-
         if (!currentRoom)
             return false
 
         if (appendCurrentParticipants)
             content.currentParticipants = currentRoom.currentParticipants
         
-        currentRoom.currentParticipants.map(participant => {
-            if (wsConnectionsInstance.getSockets(participant.id)) {
-                
-
-                if(!sendToSelf) {
-                    if (selfId !== participant.id) {
-                        wsConnectionsInstance.getSockets(participant.id).map(ws => {
-                            ws.send(type, content)
-                        })
-                    }
+        const idList = currentRoom.currentParticipants.map(participant => {
+            if(!sendToSelf) {
+                if (selfId !== participant.id) {
+                    return participant.id
                 }
-                else {
-                    wsConnectionsInstance.getSockets(participant.id).map(ws => {
-                        ws.send(type, content)
-                    })
-                }
-
-            } 
+            }
+            else {
+                return participant.id
+            }
         })
+
+        await wsConnectionsInstance.send({ 
+            to: idList,
+            content,
+            topic: type
+        })
+        
         return true
     }
 }

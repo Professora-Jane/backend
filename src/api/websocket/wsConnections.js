@@ -1,4 +1,5 @@
 const ws = require("ws");
+const { workerPoolInstance } = require("../../business/lib/workers/WorkerPool");
 
 class WsConnections {
 
@@ -68,6 +69,17 @@ class WsConnections {
             return clientSockets.sockets
 
         return undefined
+    }
+
+    /**
+     * 
+     * @param { object } msg 
+     * @param { Array<string> } msg.to - Arrray de ids para os quais a mensagem será enviada 
+     * @param { string } msg.topic - Topico no qual a mensagem será enviada
+     * @param { string | object } msg.content - conteúdo da mensagem
+     */
+    async send({ to, topic, content}) {
+        await workerPoolInstance.publish("PubSub", "notify.clients.websocket", { to, content, topic })
     }
 }
 
