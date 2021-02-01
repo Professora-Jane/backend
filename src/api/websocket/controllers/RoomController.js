@@ -12,6 +12,8 @@ const {
     ROOM_CANVAS_DATA,
 } = require("../topics/eventTopics")
 const { CLOSING } = require("ws")
+const WebsocketHandlerWorkerService = require("../../../workers/WebsocketHandlerWorkerService")
+const { workerPoolInstance } = require("../../../business/lib/workers/WorkerPool")
 
 
 
@@ -97,31 +99,14 @@ class RoomController  extends BaseWsController {
         }
     }
 
-    async [ROOM_CANVAS_DATA]({ roomId, data, to }) {
-        if (to) {
-            const room = await this.roomManagerService.getRoomDetails({ roomId })
-
-            if (room && room.currentParticipants.length) {
-                room.currentParticipants
-                    .filter(participant => participant.id === to)
-                    .map(participant => {
-                        if (wsConnectionsInstance.getSockets(participant.id)) {
-                            wsConnectionsInstance.getSockets(participant.id).map(ws => {
-                                ws.send(ROOM_CANVAS_DATA, { offer, participantId })
-                            })
-                        } 
-                    })
+    async [ROOM_CANVAS_DATA]({ roomId, data }) {
+        await this.roomManagerService.broadcastMessageToRoom({
+            roomId,
+            type: ROOM_CANVAS_DATA,
+            content: {
+                data
             }
-        }
-        else {
-            await this.roomManagerService.broadcastMessageToRoom({
-                roomId,
-                type: ROOM_CANVAS_DATA,
-                content: {
-                    data
-                }
-            })
-        }
+        })
     }
 }
 
