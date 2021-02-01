@@ -10,6 +10,11 @@ module.exports = {
     peer: {
         port: process.env.PEER_PORT
     },
+    workerStrategies: {
+        zeroMq: {
+            host: process.env.ZERO_MQ_HOST
+        }
+    },
     db: {
         connectionString: process.env.DB_CONNECTION_STRING,
         options: {
