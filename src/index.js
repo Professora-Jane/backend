@@ -4,20 +4,12 @@ const { wsServerInstance } = require('./server/wsServer');
 const errorHandler = require("./business/lib/RestErrorHandler");
 const config = require("./config/config");
 const path = require('path');
-const { dbInstance } = require('./db');
 const { wsHandlerInstance } = require("./api/websocket/WsHandler")
 const { wsConnectionsInstance } = require("./api/websocket/wsConnections");
-const { redisDbInstance } = require('./db/redis');
 
 // Run the server!
 const start = async () => {
-    try {
-        await dbInstance.connect(config.db);
-
-        await redisDbInstance
-            .config(config.redis)
-            .connect({ prefix: "professoraJane" });
-        
+    try {        
         await restServerInstance
             .configureServer(config.server)
             .configureSwagger(config.openApi)
