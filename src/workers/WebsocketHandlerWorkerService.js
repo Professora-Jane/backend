@@ -1,10 +1,6 @@
 const { wsConnectionsInstance } = require("../api/websocket/wsConnections");
 const BaseWorkerService = require("../business/lib/workers/abstracts/BaseWorkerService");
 
-/**
- * @class
- * @extends { BaseWorkerService }
- */
 class WebsocketHandlerWorkerService extends BaseWorkerService {
 
     constructor() {
@@ -14,13 +10,13 @@ class WebsocketHandlerWorkerService extends BaseWorkerService {
     }
 
     /**
-     * 
      * @param { object } msg 
      * @param { Array<string> } msg.to - Array de ids para os quais a mensagem será enviada 
      * @param { string } msg.topic - Tópico no qual a mensagem será enviada
      * @param { string | object } msg.content - conteúdo da mensagem
      */
     async execute({ to, topic, content }) {
+        
         if (typeof content === "string")
             content = JSON.parse(content)
 
@@ -33,6 +29,10 @@ class WebsocketHandlerWorkerService extends BaseWorkerService {
         })
     }
 
+    /**
+     * @param { Error } err 
+     * @param { object } originalMsg 
+     */
     doOnError(err, originalMsg) {
         console.error(err, originalMsg)
     }

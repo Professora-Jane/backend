@@ -181,13 +181,16 @@ class RoomManagerService  {
             }
         })
 
-        await wsConnectionsInstance.send({ 
-            to: idList,
-            content,
-            topic: type
-        })
-        
-        return true
+        if (idList.length) {
+            await wsConnectionsInstance.send({ 
+                to: idList,
+                content,
+                topic: type
+            })
+            return true
+        }
+
+        return false
     }
 }
 
