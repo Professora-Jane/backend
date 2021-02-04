@@ -1,5 +1,10 @@
 const InvalidParamsException = require("../../httpExceptions/InvalidParamsException");
 
+/**
+ * @class
+ * @abstract
+ * @template T
+ */
 class BaseWorkerService {
     constructor({ topic }) {
         if (this.constructor == BaseWorkerService) {
@@ -10,10 +15,17 @@ class BaseWorkerService {
             throw new InvalidParamsException("Tópico não informado")
 
         this.topic = topic
+
+        /**
+         * @type { T }
+         */
+        this.conn = undefined
     }
 
     /**
+     * Executa a lógica negocial com base na mensagem (JSON) recebida
      * @abstract
+     * @async
      * @param { object } msg 
      */
     execute() {
@@ -21,7 +33,9 @@ class BaseWorkerService {
     }
 
     /**
+     * Lógica que o worker deve executar caso ocorra uma falha no processamento da mensagem original.
      * @abstract
+     * @async
      * @param { Error } err
      * @param { object } originalMsg
      */

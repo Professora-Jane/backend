@@ -1,5 +1,9 @@
 const BaseWorkerService = require("./BaseWorkerService")
 
+/**
+ * @class
+ * @abstract
+ */
 class DefaultStrategy {
     constructor() {
         if (this.constructor == DefaultStrategy) {
@@ -28,6 +32,13 @@ class DefaultStrategy {
      * @abstract
      */
     publishPubSub() {
+        throw new Error("Not implemented")
+    }
+
+    /**
+     * @abstract
+     */
+    configureWorkers() {
         throw new Error("Not implemented")
     }
 }
