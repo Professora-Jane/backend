@@ -11,7 +11,6 @@ const fastify = require('fastify');
 const TeacherSchemaResponseModel = require("../../schemas/responses/TeacherSchemaResponseModel");
 const ClassResponseSchema = require("../../schemas/responses/ClassResponseSchema");
 
-const studentController = new StudentController();
 
 /**
  * 
@@ -30,7 +29,7 @@ module.exports = (app, opts, done) => {
                 response: DefaultResponseModel(StudentSchemaResponseModel).response
             }
         },
-        async (req, res) => await studentController.getById(req, res)
+        async (req, res) => await new StudentController().getById(req, res)
     );
     
     app.get(
@@ -46,7 +45,7 @@ module.exports = (app, opts, done) => {
                 authMiddlewareInstance.verifyToken
             ]
         },
-        async (req, res) => await studentController.listByTeacherId(req, res)
+        async (req, res) => await new StudentController().listByTeacherId(req, res)
     );
     
     app.get(
@@ -62,7 +61,7 @@ module.exports = (app, opts, done) => {
                 authMiddlewareInstance.verifyToken
             ]
         },
-        async (req, res) => await studentController.listTeachers(req, res)
+        async (req, res) => await new StudentController().listTeachers(req, res)
     );
     
     app.get(
@@ -92,7 +91,7 @@ module.exports = (app, opts, done) => {
                 authMiddlewareInstance.verifyToken
             ]
         },
-        async (req, res) => await studentController.listClasses(req, res)
+        async (req, res) => await new StudentController().listClasses(req, res)
     );
 
     app.post(
@@ -104,7 +103,7 @@ module.exports = (app, opts, done) => {
                 response: IdResponseSchema("Id do estudante criado").response
             }
         }, 
-        async (req, res) => await studentController.createStudent(req, res)
+        async (req, res) => await new StudentController().createStudent(req, res)
     );
 
     done()

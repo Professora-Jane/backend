@@ -1,7 +1,6 @@
 const AuthController = require("../../controllers/AuthController");
 const fastify = require('fastify');
 
-const authController = new AuthController();
 
 /**
  * 
@@ -39,7 +38,7 @@ module.exports = (app, opts, done) => {
                 },
             }
         },
-        async (req, res) => await authController.loginUser(req, res)
+        async (req, res) => await new AuthController().loginUser(req, res)
     );
 
     done()

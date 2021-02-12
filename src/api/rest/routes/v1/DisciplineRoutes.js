@@ -4,8 +4,6 @@ const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const DefaultPaginationQuery = require("../../schemas/requests/DefaultPaginationQuery");
 const fastify = require('fastify');
 
-const disciplineController = new DisciplineController();
-
 
 /**
  * 
@@ -22,7 +20,7 @@ module.exports = (app, opts, done) => {
                 params: idSchema.params
             } 
         },
-        async (req, res) => await disciplineController.getById(req, res)
+        async (req, res) => await new DisciplineController().getById(req, res)
     );
 
     app.post(
@@ -41,7 +39,7 @@ module.exports = (app, opts, done) => {
                 response: IdResponseSchema().response 
             }
         },
-        async (req, res) => await disciplineController.createDiscipline(req, res)
+        async (req, res) => await new DisciplineController().createDiscipline(req, res)
     );
 
     app.get(
@@ -52,7 +50,7 @@ module.exports = (app, opts, done) => {
                 query: DefaultPaginationQuery,
             }
         },
-        async (req, res) => await disciplineController.listDisciplines(req, res)
+        async (req, res) => await new DisciplineController().listDisciplines(req, res)
     );
     
     done()

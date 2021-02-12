@@ -4,8 +4,6 @@ const idSchema = require("../../schemas/requests/IdSchemaRequest");
 const fastify = require('fastify');
 const ClassResponseSchema = require("../../schemas/responses/ClassResponseSchema");
 
-const classController = new ClassController();
-
 /**
  * 
  * @param { fastify.FastifyInstance } app 
@@ -30,7 +28,7 @@ module.exports = (app, opts, done) => {
                 }
             }
         },
-        async (req, res) => await classController.getClass(req, res)
+        async (req, res) => await new ClassController().getClass(req, res)
     );
 
     app.post(
@@ -72,7 +70,7 @@ module.exports = (app, opts, done) => {
                 response: IdResponseSchema().response 
             }
         },
-        async (req, res) => await classController.createClass(req, res)
+        async (req, res) => await new ClassController().createClass(req, res)
     );
 
     done()

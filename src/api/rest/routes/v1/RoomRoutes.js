@@ -4,7 +4,7 @@ const IdSchemaRequest = require("../../schemas/requests/IdSchemaRequest");
 const DefaultPaginationQuery = require("../../schemas/requests/DefaultPaginationQuery");
 const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const creteRoomSchema = require("../../schemas/requests/CreateRoomRequest")
-const roomController = new RoomController();
+
 
 /**
  * 
@@ -22,7 +22,7 @@ module.exports = (app, opts, done) => {
                 params: IdSchemaRequest.params,
             }
         },
-        async (req, res) => await roomController.getRoomById(req, res)
+        async (req, res) => await new RoomController().getRoomById(req, res)
     );
     
     app.get(
@@ -33,7 +33,7 @@ module.exports = (app, opts, done) => {
                 params: IdSchemaRequest.params,
             }
         },
-        async (req, res) => await roomController.getCurrentRoom(req, res)
+        async (req, res) => await new RoomController().getCurrentRoom(req, res)
     );
     
     app.get(
@@ -45,7 +45,7 @@ module.exports = (app, opts, done) => {
                 query: DefaultPaginationQuery,
             }
         },
-        async (req, res) => await roomController.listFinishedRooms(req, res)
+        async (req, res) => await new RoomController().listFinishedRooms(req, res)
     );
 
     app.post(
@@ -57,7 +57,7 @@ module.exports = (app, opts, done) => {
                 response: IdResponseSchema("Sala criada!!").response
             }
         },
-        async (req, res) => await roomController.createRoom(req, res)
+        async (req, res) => await new RoomController().createRoom(req, res)
     );
     
     app.put(
@@ -68,7 +68,7 @@ module.exports = (app, opts, done) => {
                 params: IdSchemaRequest.params
             }
         },
-        async (req, res) => await roomController.startRoom(req, res)
+        async (req, res) => await new RoomController().startRoom(req, res)
     );
 
     app.put(
@@ -79,7 +79,7 @@ module.exports = (app, opts, done) => {
                 params: IdSchemaRequest.params
             }
         },
-        async (req, res) => await roomController.finishRoom(req, res)
+        async (req, res) => await new RoomController().finishRoom(req, res)
     );
 
     done()

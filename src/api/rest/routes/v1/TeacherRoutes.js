@@ -2,7 +2,6 @@ const TeacherController = require("../../controllers/TeacherController");
 const createTeacherSchema = require("../../schemas/createTeacherSchema");
 const IdResponseSchema = require("../../schemas/responses/IdResponseSchema");
 const idSchema = require("../../schemas/requests/IdSchemaRequest");
-const teacherController = new TeacherController();
 const fastify = require('fastify');
 const { authMiddlewareInstance } = require("../../../../business/lib/auth/AuthMiddleware");
 const TeacherSchemaResponseModel = require("../../schemas/responses/TeacherSchemaResponseModel");
@@ -34,7 +33,7 @@ module.exports = (app, opts, done) => {
                 authMiddlewareInstance.verifyToken
             ]
         },
-        async (req, res) => await teacherController.getTeacher(req, res)
+        async (req, res) => await new TeacherController().getTeacher(req, res)
     );
     
     app.get(
@@ -65,7 +64,7 @@ module.exports = (app, opts, done) => {
                 authMiddlewareInstance.requireTeacher,
             ]
         }, 
-        async (req, res) => await teacherController.listTeacherClasses(req, res)
+        async (req, res) => await new TeacherController().listTeacherClasses(req, res)
     );
 
     app.post(
@@ -77,7 +76,7 @@ module.exports = (app, opts, done) => {
                 response: IdResponseSchema().response 
             }
         },
-        async (req, res) => await teacherController.createTeacher(req, res)
+        async (req, res) => await new TeacherController().createTeacher(req, res)
     );
 
     app.post(
@@ -111,7 +110,7 @@ module.exports = (app, opts, done) => {
                 authMiddlewareInstance.requireTeacher,
             ]
         },
-        async (req, res) => await teacherController.createTeacherStudent(req, res)
+        async (req, res) => await new TeacherController().createTeacherStudent(req, res)
     );
 
     app.put(
@@ -122,7 +121,7 @@ module.exports = (app, opts, done) => {
                 params: idSchema.params
             }
         },
-        async (req, res) => await teacherController.updateTeacher(req, res)
+        async (req, res) => await new TeacherController().updateTeacher(req, res)
     );
 
     app.delete(
@@ -144,7 +143,7 @@ module.exports = (app, opts, done) => {
                 authMiddlewareInstance.requireTeacher,
             ]
         },
-        async (req, res) => await teacherController.deleteTeacherStudent(req, res)
+        async (req, res) => await new TeacherController().deleteTeacherStudent(req, res)
     );
     
     done()
