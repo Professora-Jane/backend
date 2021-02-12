@@ -1,5 +1,4 @@
-const { wsConnectionsInstance } = require("../api/websocket/wsConnections");
-const BaseWorkerService = require("../business/lib/workers/abstracts/BaseWorkerService");
+const { wsConnectionsInstance, BaseWorkerService } = require("@prof_jane/node-utils")
 
 class WebsocketHandlerWorkerService extends BaseWorkerService {
 

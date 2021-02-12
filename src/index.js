@@ -4,8 +4,7 @@ const { wsServerInstance } = require('./server/wsServer');
 const errorHandler = require("./business/lib/RestErrorHandler");
 const config = require("./config/config");
 const path = require('path');
-const { wsHandlerInstance } = require("./api/websocket/WsHandler")
-const { wsConnectionsInstance } = require("./api/websocket/wsConnections");
+const { wsHandlerInstance, wsConnectionsInstance } = require("@prof_jane/node-utils");
 
 // Run the server!
 const start = async () => {
@@ -20,9 +19,9 @@ const start = async () => {
         restServerInstance.log.info(`server listening on ${ config.api.port }`)
         
         wsHandlerInstance
-            .registerControllers({ 
-                path: path.join(__dirname, './api/websocket/controllers/'),
-                ignoreFiles: ["BaseController.js"]
+            .registerSubscribers({ 
+                path: path.join(__dirname, './api/websocket/subscribers/'),
+                ignoreFiles: ["BaseSubscriber.js"]
             })
 
         wsServerInstance

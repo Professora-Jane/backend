@@ -1,9 +1,8 @@
 const { ROOM_FINISH } = require("../../api/websocket/topics/eventTopics");
-const { workerPoolInstance } = require("../../business/lib/workers/WorkerPool");
 const DateAndTimeUtils = require("../utils/DateAndTimeUtil");
 const ConflictException = require("../lib/httpExceptions/ConflictException");
 const CurrentRoomRepository = require("../repositories/redis/CurrentRoomRepository");
-const { wsConnectionsInstance } = require("../../api/websocket/wsConnections");
+const { workerPoolInstance, publishTypes } = require("@prof_jane/node-utils");
 
 class RoomManagerService  {
     constructor() {
@@ -182,10 +181,11 @@ class RoomManagerService  {
         })
 
         if (idList.length) {
-            await wsConnectionsInstance.send({ 
-                to: idList,
-                content,
-                topic: type
+            await workerPoolInstance.publish({
+                provider: "zeroMq",
+                type: publishTypes.PubSub,
+                topic: "notify.clients.websocket",
+                content: { to: idList, content, topic: type } 
             })
             return true
         }

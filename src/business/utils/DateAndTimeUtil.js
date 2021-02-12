@@ -51,7 +51,7 @@ class DateAndTimeUtils {
     /**
      * @description Função auxiliar para montar um timestamp a partir dos minutos totais e um índice representando o dia da semana
      * @param { number } time String representando hora no formato 'HH:mm'
-     * @param { number } dayOfWeekIndex String representando hora no formato 'HH:mm'
+     * @param { number } dayOfWeekIndex Número indicando o índice do dia de semana
      * @returns { number }
      */
     static getTimestampFromMinutesAndDayIndex(time, dayOfWeekIndex) {

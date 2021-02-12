@@ -4,7 +4,8 @@ const NohmModel = require('nohm').NohmModel;
 class BaseRepository {
     constructor(dataModel) {
         /**
-         * @type { NohmModel }
+         * @template T
+         * @type { NohmModel<T> }
          */
         this.model = new dataModel()
     }

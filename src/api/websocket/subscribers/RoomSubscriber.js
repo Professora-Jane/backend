@@ -1,5 +1,5 @@
 const RoomManagetService = require("../../../business/services/RoomManagerService")
-const { wsConnectionsInstance } = require("../wsConnections")
+const { wsConnectionsInstance } = require("@prof_jane/node-utils")
 const BaseWsSubscriber = require("./BaseSubscriber")
 const {
     ROOM_JOIN,

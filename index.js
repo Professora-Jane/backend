@@ -6,8 +6,7 @@ const { hashHandlerInstance } = require('./src/business/lib/auth/HashHandler');
 const { authHandlerInstance } = require('./src/business/lib/auth/AuthHandler');
 const { dbInstance } = require('./src/db/index');
 const { redisDbInstance } = require('./src/db/redis');
-const { workerPoolInstance, workerTypes } = require('./src/business/lib/workers/WorkerPool');
-const ZeroMqStrategy = require('./src/business/lib/workers/strategies/ZeroMqStrategy');
+const { ZeroMqProvider, workerPoolInstance, workerTypes } = require("@prof_jane/node-utils");
 const WebsocketHandlerWorkerService = require('./src/workers/WebsocketHandlerWorkerService');
 
 
@@ -22,8 +21,8 @@ const WebsocketHandlerWorkerService = require('./src/workers/WebsocketHandlerWor
     authHandlerInstance.configureHandler(config.auth)
 
     await workerPoolInstance
-        .addStrategy(ZeroMqStrategy, 'zeroMq', config.workerStrategies.zeroMq)
-        .addWorker(new WebsocketHandlerWorkerService(), { strategyName: 'zeroMq', workerType: workerTypes.pubsub })
+        .addProvider(ZeroMqProvider, 'zeroMq', config.workerStrategies.zeroMq)
+        .addWorker(new WebsocketHandlerWorkerService(), { providerName: 'zeroMq', workerType: workerTypes.pubsub })
         .init()
 
     await startServer()
