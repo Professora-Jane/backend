@@ -1,6 +1,6 @@
-const BaseWsController = require("./BaseController")
+const BaseWsSubscriber = require("./BaseSubscriber")
 
-class ChatController  extends BaseWsController {
+class ChatSubscriber  extends BaseWsSubscriber {
     constructor() {
         super()
     }
@@ -11,4 +11,4 @@ class ChatController  extends BaseWsController {
     }
 }
 
-module.exports = new ChatController()
+module.exports = new ChatSubscriber()

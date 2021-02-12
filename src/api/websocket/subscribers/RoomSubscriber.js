@@ -1,6 +1,6 @@
 const RoomManagetService = require("../../../business/services/RoomManagerService")
 const { wsConnectionsInstance } = require("../wsConnections")
-const BaseWsController = require("./BaseController")
+const BaseWsSubscriber = require("./BaseSubscriber")
 const {
     ROOM_JOIN,
     ROOM_LEAVE,
@@ -11,13 +11,8 @@ const {
     ROOM_CANVAS,
     ROOM_CANVAS_DATA,
 } = require("../topics/eventTopics")
-const { CLOSING } = require("ws")
-const WebsocketHandlerWorkerService = require("../../../workers/WebsocketHandlerWorkerService")
-const { workerPoolInstance } = require("../../../business/lib/workers/WorkerPool")
 
-
-
-class RoomController  extends BaseWsController {
+class RoomSubscriber  extends BaseWsSubscriber {
     constructor() {
         super()
         this.roomManagerService = new RoomManagetService()
@@ -110,4 +105,4 @@ class RoomController  extends BaseWsController {
     }
 }
 
-module.exports = new RoomController()
+module.exports = new RoomSubscriber()
